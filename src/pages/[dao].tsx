@@ -57,11 +57,14 @@ export default function Dao() {
             proposalsQueued: "0",
           },
           timelock: { id: "0x00b60986b613b953d6da14ea6ead2f93861b61bd" },
+          token: {
+            id: "0xc1c31b236d0dbff0760b7a9cbb935619f752f591",
+          },
         },
       ];
       setTimelockAddress(daotest[0].timelock.id as `0x${string}`);
-      setDao(daotest[0]);
       setGovernorAddress(daotest[0].gov.id as `0x${string}`);
+      setDao(daotest[0]);
 
       // setTimelockAddress(response.data.daos[0].timelock.id);
       // setGovernorAddress(response.data.daos[0].gov.id);

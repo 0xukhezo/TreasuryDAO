@@ -14,7 +14,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Treasury DAO",
+  appName: "Investment DAO",
   chains,
 });
 
@@ -29,8 +29,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Treasury DAO</title>
-        <meta name="description" content="Treasury DAO" />
+        <title>Investment DAO</title>
+        <meta name="description" content="POAP Estudiantes" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>

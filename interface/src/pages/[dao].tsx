@@ -75,7 +75,7 @@ export default function Dao() {
 
   useEffect(() => {
     fetchDao(router.query.dao as string);
-  });
+  }, []);
 
   const setDisplay = (type: string) => {
     setDisplayType(type);
@@ -129,8 +129,8 @@ export default function Dao() {
             timelockAddress={timelockAddress}
             governorAddress={governorAddress}
           />
-        ) : displayType === "gmxPositions" ||
-          displayType === "gmxOpenPosition" ? (
+        ) : displayType === "aavePositions" ||
+          displayType === "aaveOpenPosition" ? (
           timelockAddress &&
           governorAddress && (
             <AAVEPanel

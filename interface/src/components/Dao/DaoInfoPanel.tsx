@@ -1,16 +1,10 @@
 import React from "react";
-import { AaveProtocolDataProvider } from "@aave/core-v3/contracts/misc/AaveProtocolDataProvider.sol";
 
 interface DaoInfoPanelInterface {
   dao: any;
 }
 
 export default function DaoInfoPanel({ dao }: DaoInfoPanelInterface) {
-  AaveProtocolDataProvider poolDataProvider = AaveProtocolDataProvider(provider.getPoolDataProvider());
-
-  const  asset = "0x...";
-  protocolDataProvider.getSiloedBorrowing(asset);
-
   return (
     <div>
       {dao !== undefined && (

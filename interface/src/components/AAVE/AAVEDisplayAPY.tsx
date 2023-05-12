@@ -23,14 +23,18 @@ export default function AAVEDisplayAPY({
   useEffect(() => {
     const apyData = data as Object;
     setApy(apyData);
+    console.log(apyData);
   }, [isSuccess]);
 
   return (
-    <div>
-      {apy !== undefined &&
-        Number(
-          ethers.utils.formatUnits(apy.variableBorrowRate.toString(), "25")
-        ).toFixed(2)}
+    <div className="flex">
+      <div className="mr-10">
+        {apy !== undefined &&
+          Number(
+            ethers.utils.formatUnits(apy.variableBorrowRate.toString(), "25")
+          ).toFixed(2)}
+      </div>
+      <div>{tokenAddress}</div>
     </div>
   );
 }

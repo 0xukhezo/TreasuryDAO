@@ -4,11 +4,15 @@ pragma solidity ^0.8.9;
 import {Gov} from "./Gov.sol";
 import {GovToken} from "./GovToken.sol";
 import {IGovDeployer} from "./deployers/IGovDeployer.sol";
+import {IGovHelperDeployer} from "./deployers/IGovHelperDeployer.sol";
+import {GovHelper} from "./GovHelper.sol";
 import {TimelockController} from "@openzeppelin/contracts/governance/TimelockController.sol";
 
 contract GovFactory {
 
     IGovDeployer immutable govDeployer;
+    IGovHelperDeployer immutable govHelperDeployer;
+   
 
     /// @notice Emitted when a DAO is created.
     /// @param sender Address wants to deploy DAO. Is indexed for query event.
@@ -19,20 +23,26 @@ contract GovFactory {
         address indexed sender,
         address gov,
         address timelock,
-        address token
+        address token,
+        address helper
     );
 
     struct Dao {
         Gov gov;
         GovToken token;
         TimelockController timelock;
+        GovHelper govHelper;
     }
 
     address[] public daos;
     mapping(address => Dao) public daoInfo;
 
-    constructor(IGovDeployer _govDeployer) {
+    constructor(
+        IGovDeployer _govDeployer,
+        IGovHelperDeployer _govHelperDeployer
+    ) {
         govDeployer = _govDeployer;
+        govHelperDeployer = _govHelperDeployer;
     }
 
     function deployDao(
@@ -53,12 +63,14 @@ contract GovFactory {
         
         Gov gov = govDeployer.deploy(token,timelock,_name,_votingDelay,_votingPeriod,_quorumFraction,_proposalThreshold);
 
-        setUpDao(timelock,gov,token,_premint);
+        GovHelper helper = govHelperDeployer.deploy();
+
+        setUpDao(timelock,gov,token,helper,_premint);
 
         daos.push(address(gov));
-        daoInfo[address(gov)] = Dao(gov,token,timelock);
+        daoInfo[address(gov)] = Dao(gov,token,timelock,helper);
 
-        emit DAOCreated(msg.sender, address(gov), address(timelock), address(token));
+        emit DAOCreated(msg.sender, address(gov), address(timelock), address(token),address(helper));
    
     }
 
@@ -71,6 +83,7 @@ contract GovFactory {
         TimelockController _timelock,
         Gov _gov,
         GovToken _token,
+        GovHelper _govHelper,
         uint256 _premint
     ) internal {
         bytes32 proposerRole = _timelock.PROPOSER_ROLE();
@@ -81,6 +94,8 @@ contract GovFactory {
         _timelock.grantRole(proposerRole, address(_gov));
         _timelock.grantRole(executorRole, address(_gov));
         _timelock.renounceRole(adminRole, address(this));
+
+        _govHelper.transferOwnership(address(_timelock));
 
         _token.mint(msg.sender,_premint);
         _token.transferOwnership(address(_timelock));

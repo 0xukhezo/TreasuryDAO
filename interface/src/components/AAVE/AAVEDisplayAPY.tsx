@@ -14,7 +14,7 @@ export default function AAVEDisplayAPY({
   contractAddress,
   coins,
 }: AAVEDisplayAPYInterface) {
-  const [apy, setApy] = useState<Object>();
+  const [apy, setApy] = useState<any>();
   const { data, isSuccess } = useContractRead({
     address: contractAddress,
     abi: abi.abiPoolDataProvider,

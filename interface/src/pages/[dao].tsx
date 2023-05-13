@@ -196,66 +196,71 @@ export default function Dao() {
           </div>
         </div>
       )}
-      {displayType === "daoInfo" ? (
-        <div className="flex items-center flex-col justify-center mt-10 h-96 bg-beige mx-14 rounded-lg font-bold text-xl">
-          <h1 className="mb-4">View positions in</h1>
-          <div className="flex text-center">
-            <button
-              className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
-              onClick={() => setDisplay("uniswapPositions")}
-            >
-              <Image
-                width={100}
-                height={100}
-                alt="Chain Image"
-                src={Uniswap}
-                className="p-2"
-              />{" "}
-              <span className="mt-2">Uniswap</span>
-            </button>
-            <button
-              className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
-              onClick={() => setDisplay("aavePositions")}
-            >
-              <Image
-                width={80}
-                height={80}
-                alt="Chain Image"
-                src={AAVE}
-                className="p-2"
-              />{" "}
-              <span className="mt-2">AAVE</span>
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className={"w-full"}>
-          {timelockAddress && governorAddress && displayType === "aavePositions"
-            ? timelockAddress &&
-              governorAddress && (
-                <AAVEPanel
-                  display={displayType}
-                  timelockAddress={timelockAddress}
-                  governorAddress={governorAddress}
-                  getDisplay={getDisplay}
-                />
-              )
-            : timelockAddress &&
+      {displayType === "daoInfo"
+        ? dao && (
+            <div className="flex items-center flex-col justify-center mt-10 h-96 bg-beige mx-14 rounded-lg font-bold text-xl">
+              <h1 className="mb-4">View positions in</h1>
+              <div className="flex text-center">
+                <button
+                  className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
+                  onClick={() => setDisplay("uniswapPositions")}
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    alt="Chain Image"
+                    src={Uniswap}
+                    className="p-2"
+                  />{" "}
+                  <span className="mt-2">Uniswap</span>
+                </button>
+                <button
+                  className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
+                  onClick={() => setDisplay("aavePositions")}
+                >
+                  <Image
+                    width={80}
+                    height={80}
+                    alt="Chain Image"
+                    src={AAVE}
+                    className="p-2"
+                  />
+                  <span className="mt-2">AAVE</span>
+                </button>
+              </div>
+            </div>
+          )
+        : dao && (
+            <div className={"w-full"}>
+              {timelockAddress &&
               governorAddress &&
-              (displayType === "uniswapPositions" ||
-                displayType === "uniswapPositionsOpen") && (
-                <UniswapPanel
-                  display={displayType}
-                  timelockAddress={timelockAddress}
-                  governorAddress={governorAddress}
-                  getDisplay={getDisplay}
-                />
-              )}
-        </div>
-      )}
+              displayType === "aavePositions"
+                ? timelockAddress &&
+                  governorAddress && (
+                    <AAVEPanel
+                      display={displayType}
+                      timelockAddress={timelockAddress}
+                      governorAddress={governorAddress}
+                      getDisplay={getDisplay}
+                    />
+                  )
+                : timelockAddress &&
+                  governorAddress &&
+                  (displayType === "uniswapPositions" ||
+                    displayType === "uniswapPositionsOpen") && (
+                    <UniswapPanel
+                      display={displayType}
+                      timelockAddress={timelockAddress}
+                      governorAddress={governorAddress}
+                      getDisplay={getDisplay}
+                    />
+                  )}
+            </div>
+          )}
       {displayType === "aavePositionsOpen" &&
         timelockAddress &&
-        governorAddress && (
+        governorAddress &&
+        dao && (
           <AAVEPanel
             display={displayType}
             timelockAddress={timelockAddress}

@@ -5,9 +5,7 @@ import { INonfungiblePositionManager } from '../types/INonfungiblePositionManage
 
 const maxUint128 = "340282366920938463463374607431768211455"
 
-const timelock = "0x00B60986B613B953d6DA14EA6eAd2f93861B61bD";
-
-export async function createProposalOpenPositionUniswap( amount0Min:string, amount1Min:string, fee:string, token0: ERC20, amount0: BigNumber, token1: ERC20, amount1: BigNumber, nonFungiblePositionManager: INonfungiblePositionManager, tickLower: number, tickUpper:number, title:string, description:string) {
+export async function createProposalOpenPositionUniswap(timelock:string, amount0Min:string, amount1Min:string, fee:string, token0: ERC20, amount0: BigNumber, token1: ERC20, amount1: BigNumber, nonFungiblePositionManager: INonfungiblePositionManager, tickLower: number, tickUpper:number, title:string, description:string) {
   let callDatas = []
   let targets = []
   let values = []

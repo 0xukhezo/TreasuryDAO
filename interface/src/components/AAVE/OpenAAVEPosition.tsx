@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TokenSelector from "../TokenSelector/TokenSelector";
 import ethLogo from "../../../public/ic_ethereum.svg";
 import FeeSelector from "@/components/FeeSelector/FeeSelector";
-import createProposalOpenPositionUniswap from "../../../utils/uniswapFunctions";
+import { createProposalOpenPositionAAVE } from "../../../utils/aaveFunctions";
 import abi from "../../../abi/abis.json";
 import { useProvider } from "wagmi";
 import { ERC20 } from "../../../types/ERC20";
@@ -66,12 +66,6 @@ export default function OpenAAVEPosition({
   const onGeretarePayloadClick = async () => {
     if (token1 !== undefined && selectedFee !== undefined) {
       const token1Address = token1[0] as string;
-      const token2Address = token2[0] as string;
-      const compareTokens =
-        token1Address
-          .toLowerCase()
-          .localeCompare(token2Address.toLocaleLowerCase()) == 1;
-
       loadData(selectedFee).then(() => setPayload(true));
     }
   };
@@ -83,7 +77,7 @@ export default function OpenAAVEPosition({
       provider
     ) as INonfungiblePositionManager;
 
-    const result = await createProposalOpenPositionUniswap();
+    const result = await createProposalOpenPositionAAVE();
 
     setCallDatas(result.callDatas);
     setValues(result.values);

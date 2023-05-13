@@ -87,13 +87,18 @@ export default function AAVEPanel({
             </button>
           </div>
           {debtAAVEArbitrum?.length !== 0 && (
-            <div className="flex flex-row grid grid-cols-6 mt-6">
-              <div></div>
-              <div className="pl-20">Collateral</div>
-              <div>Loan Interest Rate</div>
-              <div className="pl-14">Realized PnL</div>
-              <div className="pl-8">Unrealized PnL</div>
-            </div>
+            <>
+              <div className="flex flex-row grid grid-cols-6 mt-6">
+                <div></div>
+                <div className="pl-20">Collateral</div>
+                <div>Loan Interest Rate</div>
+                <div className="pl-14">Realized PnL</div>
+                <div className="pl-8">Unrealized PnL</div>
+              </div>
+              <div className="animate-pulse mx-14">
+                <div className="rounded-lg bg-beige px-4 py-10 mt-4"></div>
+              </div>
+            </>
           )}
           {debtAAVEArbitrum.map((debtToken: any, index: number) => {
             return (

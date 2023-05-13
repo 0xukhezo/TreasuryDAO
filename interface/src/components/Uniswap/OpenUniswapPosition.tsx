@@ -21,11 +21,13 @@ const fees = [10000, 3000, 1000, 500];
 
 interface OpenUniswapPositionInterface {
   governorAddress: `0x${string}`;
+  timelockAddress: `0x${string}`;
   displayPositions: string;
 }
 
 export default function OpenUniswapPosition({
   governorAddress,
+  timelockAddress,
   displayPositions,
 }: OpenUniswapPositionInterface) {
   const provider = useProvider();
@@ -199,6 +201,7 @@ export default function OpenUniswapPosition({
 
     const title = "Open a pool position in Uniswap";
     const result = await createProposalOpenPositionUniswap(
+      timelockAddress.toString(),
       minimalToken1Amount.toString(),
       minimalToken2Amount.toString(),
       selectedFee.toString(),

@@ -76,12 +76,17 @@ export default function UniswapPanel({
           </div>
           <div>
             {uniswapPositionsID?.length !== 0 && (
-              <div className="flex flex-row grid grid-cols-5 mt-6">
-                <div className="mx-10"></div>
-                <div className="mx-10">Fee Tier</div>
-                <div className="mx-12">Price Range</div>
-                <div className="mx-6">Liquidity</div>
-              </div>
+              <>
+                <div className="flex flex-row grid grid-cols-5 mt-6">
+                  <div className="mx-10"></div>
+                  <div className="mx-10">Fee Tier</div>
+                  <div className="mx-12">Price Range</div>
+                  <div className="mx-6">Liquidity</div>
+                </div>
+                <div className="animate-pulse">
+                  <div className="rounded-lg bg-beige px-4 py-10 mt-4"></div>
+                </div>
+              </>
             )}
 
             {uniswapPositionsID?.map((id: string, index: number) => {
@@ -100,6 +105,7 @@ export default function UniswapPanel({
       ) : (
         <OpenUniswapPosition
           governorAddress={governorAddress}
+          timelockAddress={timelockAddress}
           displayPositions={displayPositions}
         />
       )}

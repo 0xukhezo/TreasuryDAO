@@ -31,31 +31,13 @@ async function main() {
 
   console.log(`GovFactory deployed in: ${govFactory.address}`)
 
-  const tx = await govFactory.deployDao(
-    process.env.DAO_TOKEN_NAME!,
-    process.env.DAO_TOKEN_SYMBOL!,
-    process.env.MIN_DELAY_TIMELOCK!,
-    process.env.DAO_NAME!,
-    process.env.INITIAL_VOTING_DELAY!,
-    process.env.INITIAL_VOTING_PERIOD!,
-    process.env.QUORUM!,
-    process.env.INITIAL_PROPOSAL_THRESHOLD!,
-    process.env.DAO_TOKEN_AMOUNT_PREMINT!
-)
-
-  await tx.wait(1)
-
-  const filter: DAOCreatedEventFilter = await govFactory.filters.DAOCreated(deployer.address)
-  const logs: Array<any> = await govFactory.queryFilter(filter)
-  const event: DAOCreatedEventObject = logs[0].args
-
-  console.log(`Dao deployed in: ${await govFactory.getDaos()}`)
 
   //Verify
   await hre.run("verify:verify", {
     address: govFactory.address,
     constructorArguments: [
-      govDeployer.address
+      govDeployer.address,
+      govHelperDeployer.address
     ]
   })
 }

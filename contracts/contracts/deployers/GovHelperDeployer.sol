@@ -26,8 +26,9 @@ contract GovHelperDeployer is IGovHelperDeployer {
 
 
     function deploy() external override returns (GovHelper) {
-        return
-            new GovHelper(poolAddressProvider,swapRouter,priceFeedUsdc);
+        GovHelper govHelper = new GovHelper(poolAddressProvider,swapRouter,priceFeedUsdc);
+        govHelper.transferOwnership(msg.sender);
+        return govHelper;
     }
     
 }

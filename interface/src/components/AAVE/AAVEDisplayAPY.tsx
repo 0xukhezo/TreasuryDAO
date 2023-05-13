@@ -6,11 +6,13 @@ import { ethers } from "ethers";
 interface AAVEDisplayAPYInterface {
   tokenAddress: string;
   contractAddress?: `0x${string}`;
+  coins: any;
 }
 
 export default function AAVEDisplayAPY({
   tokenAddress,
   contractAddress,
+  coins,
 }: AAVEDisplayAPYInterface) {
   const [apy, setApy] = useState<Object>();
   const { data, isSuccess } = useContractRead({
@@ -23,7 +25,6 @@ export default function AAVEDisplayAPY({
   useEffect(() => {
     const apyData = data as Object;
     setApy(apyData);
-    console.log(apyData);
   }, [isSuccess]);
 
   return (
@@ -32,9 +33,10 @@ export default function AAVEDisplayAPY({
         {apy !== undefined &&
           Number(
             ethers.utils.formatUnits(apy.variableBorrowRate.toString(), "25")
-          ).toFixed(2)}
+          ).toFixed(2)}{" "}
+        %
       </div>
-      <div>{tokenAddress}</div>
+      <div>{coins[tokenAddress][0].symbol}</div>
     </div>
   );
 }

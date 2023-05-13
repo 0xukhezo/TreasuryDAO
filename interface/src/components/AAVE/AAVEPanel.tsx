@@ -1,6 +1,11 @@
 import React from "react";
 import AAVEDisplayAPY from "./AAVEDisplayAPY";
 import { useNetwork } from "wagmi";
+import {
+  coinDataArbitrum,
+  coinDataOptimist,
+  coinDataPolygon,
+} from "../../../utils/tokens";
 
 interface AAVEPanelInterface {
   display: string;
@@ -16,7 +21,13 @@ export default function AAVEPanel({
   const { chain, chains } = useNetwork();
   let tokens: string[] = [];
   let contractAddress: `0x${string}`;
-  console.log(chain);
+  let coins: {
+    [x: string]:
+      | { img: string; symbol: string }[]
+      | { img: string; symbol: string }[]
+      | { img: string; symbol: string }[];
+  };
+
   switch (chain?.network) {
     case "optimism":
       tokens = [
@@ -26,6 +37,7 @@ export default function AAVEPanel({
         "0x4200000000000000000000000000000000000006",
       ];
       contractAddress = "0x69fa688f1dc47d4b5d8029d5a35fb7a548310654";
+      coins = coinDataOptimist;
       break;
     case "arbitrum":
       tokens = [
@@ -35,6 +47,7 @@ export default function AAVEPanel({
         "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
       ];
       contractAddress = "0x6b4E260b765B3cA1514e618C0215A6B7839fF93e";
+      coins = coinDataArbitrum;
       break;
     case "matic":
       tokens = [
@@ -44,6 +57,7 @@ export default function AAVEPanel({
         "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
       ];
       contractAddress = "0x69FA688f1Dc47d4B5d8029D5a35FB7a548310654";
+      coins = coinDataPolygon;
       break;
   }
 
@@ -55,6 +69,7 @@ export default function AAVEPanel({
             <AAVEDisplayAPY
               tokenAddress={tokenAddress}
               contractAddress={contractAddress}
+              coins={coins}
             />
           </div>
         );

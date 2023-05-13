@@ -14,12 +14,18 @@ import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAd
 
 contract GovHelper is Ownable {
 
-    event NaturalShortCreated(
+    event NaturalPositionCreated(
         address collateralToken,
         uint256 collateralAmount,
         address borrowToken,
         uint256 borrowAmount,
         uint256 interestRateMode
+    );
+
+    event NaturalPositionClosed(
+        address tokenIn, 
+        uint256 amountIn, 
+        address borrowToken
     );
 
     AggregatorV3Interface public immutable priceFeedUsdc;
@@ -64,7 +70,7 @@ contract GovHelper is Ownable {
 
         require(succeededOut, "GovHelper: Failed to transfer amountOut");
 
-        emit NaturalShortCreated(collateralToken, collateralAmount, borrowToken, borrowAmount, interestRateMode);
+        emit NaturalPositionCreated(collateralToken, collateralAmount, borrowToken, borrowAmount, interestRateMode);
         
     }
 
@@ -85,7 +91,9 @@ contract GovHelper is Ownable {
         uint256 debtAmountAfter = IERC20(data.variableDebtTokenAddress).balanceOf(_msgSender());
         require(debtAmountAfter == 0, "GovHelper: Failed to pay all debt");
 
-        returnLeftOver(tokenIn,amountIn,borrowToken,slippage,poolFee,priceFeed);
+        returnLeftOver(tokenIn,borrowToken,slippage,poolFee,priceFeed);
+
+        emit NaturalPositionClosed(tokenIn, amountIn, borrowToken);
 
     }
 
@@ -94,7 +102,6 @@ contract GovHelper is Ownable {
         uint256 amountOutLeftOver = swap(borrowToken,amountLeftOver,tokenIn,slippage,poolFee, priceFeed);
         bool succeededOut = IERC20(tokenIn).transfer(_msgSender(), amountOutLeftOver);
         require(succeededOut, "GovHelper: Failed to transfer amountOut");
-
     }
 
     function swap(

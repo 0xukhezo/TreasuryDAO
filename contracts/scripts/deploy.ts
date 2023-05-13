@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { GovDeployer__factory, GovDeployer, GovFactory__factory, GovFactory, GovHelperDeployer } from "../typechain-types"
+import { GovDeployer__factory, GovDeployer, GovFactory__factory, GovFactory, GovHelperDeployer, GovHelperDeployer__factory } from "../typechain-types"
 import { DAOCreatedEventFilter, DAOCreatedEventObject, DAOCreatedEvent } from "../typechain-types/contracts/GovFactory"
 
 //Arbitrum
@@ -30,7 +30,6 @@ async function main() {
   await govFactory.deployed()
 
   console.log(`GovFactory deployed in: ${govFactory.address}`)
-
 
   const tx = await govFactory.deployDao(
     process.env.DAO_TOKEN_NAME!,

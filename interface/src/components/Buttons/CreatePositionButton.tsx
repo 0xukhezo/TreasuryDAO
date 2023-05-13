@@ -48,12 +48,12 @@ export default function CreatePositionButton({
   return (
     <>
       <div>
-        <div className="mt-10 flex justify-center ">
+        <div className="mt-8 flex justify-center ">
           <button
             onClick={() => onCreatePositionClick()}
-            className="border-2 border-grey-500 px-4 py-2 rounded-full hover:bg-green-100 h-12 bg-green-50"
+            className="px-4 py-2 rounded-full h-12 bg-black text-white"
           >
-            Create Propousal
+            Submit Proposal
           </button>
         </div>
       </div>

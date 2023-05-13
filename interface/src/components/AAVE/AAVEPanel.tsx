@@ -18,7 +18,7 @@ export default function AAVEPanel({
   timelockAddress,
   governorAddress,
 }: AAVEPanelInterface) {
-  const { chain, chains } = useNetwork();
+  const { chain } = useNetwork();
   let tokens: string[] = [];
   let contractAddress: `0x${string}`;
   let coins: {

@@ -25,19 +25,21 @@ export default function UniswapPositionCard({
   }, [isSuccess]);
 
   return (
-    <div className="rounded-3xl bg-gray-100 px-4 py-2 mt-4 flex grid grid-cols-5 gap-x-6 items-center text-center">
-      {dataPosition && (
+    <div>
+      {dataPosition && dataPosition[7].toString() !== "0" && (
         <>
-          <PositionCardInfo
-            token0={dataPosition[2]}
-            token1={dataPosition[3]}
-            fee={dataPosition[4]}
-            tickUpper={dataPosition[5]}
-            tickLower={dataPosition[6]}
-            liquidity={dataPosition[7]}
-            feeToken0={dataPosition[8]}
-            feeToken1={dataPosition[9]}
-          />
+          <div className="rounded-lg bg-beige px-4 py-8 mt-4 ">
+            <PositionCardInfo
+              token0={dataPosition[2]}
+              token1={dataPosition[3]}
+              fee={dataPosition[4]}
+              tickUpper={dataPosition[5]}
+              tickLower={dataPosition[6]}
+              liquidity={dataPosition[7]}
+              feeToken0={dataPosition[8]}
+              feeToken1={dataPosition[9]}
+            />
+          </div>
         </>
       )}
     </div>

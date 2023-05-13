@@ -13,16 +13,20 @@ import {
   encodeSqrtRatioX96,
   nearestUsableTick,
 } from "@uniswap/v3-sdk";
+import Uniswap from "../../../public/Uniswap.svg";
 import CreatePositionButton from "../Buttons/CreatePositionButton";
+import Image from "next/image";
 
 const fees = [10000, 3000, 1000, 500];
 
 interface OpenUniswapPositionInterface {
   governorAddress: `0x${string}`;
+  displayPositions: string;
 }
 
 export default function OpenUniswapPosition({
   governorAddress,
+  displayPositions,
 }: OpenUniswapPositionInterface) {
   const provider = useProvider();
   const [token1, setToken1] = useState([
@@ -30,7 +34,7 @@ export default function OpenUniswapPosition({
     [{ img: ethLogo, symbol: "ETH" }],
   ]);
   const [token2, setToken2] = useState();
-  const [selectedFee, setSelectedFee] = useState<number>();
+  const [selectedFee, setSelectedFee] = useState<number>(10000);
   const [lowerTick, setLowerTick] = useState<number>();
   const [upperTick, setUpperTick] = useState<number>();
   const [minToken1Amount, setMinToken1Amount] = useState<number>();
@@ -222,242 +226,277 @@ export default function OpenUniswapPosition({
   }, [token1]);
 
   return (
-    <div className="mx-10">
-      <div className="flex justify-between w-full mt-10">
-        <TokenSelector getTokenSelected={getToken1Selected} token={token1} />
-        <TokenSelector
-          getTokenSelected={getToken2Selected}
-          token={token2}
-          token1={token1}
-        />
-      </div>
-      <div className="flex mt-2 w-full">
-        {fees.map((fee, index: number) => {
-          return (
-            <div key={index}>
-              <FeeSelector
-                getFeeSelected={getFeeSelected}
-                fee={fee}
-                selectedFee={selectedFee}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="lowerTick"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Upper tick price
-          </label>
-          <div className="mt-2">
-            <input
-              value={lowerTick}
-              onChange={(e) => handleLowerTickChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="lowerTick"
-              id="lowerTick"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+    <div>
+      {displayPositions === "uniswapPositionsOpen" ? (
+        <div className="mx-10 flex items-center flex-col">
+          <h1 className="flex flex-row items-center text-2xl font-semibold">
+            <Image
+              width={60}
+              height={60}
+              alt="Chain Image"
+              src={Uniswap}
+              className="p-2"
             />
-          </div>
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="upperTick"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Lower tick price
-          </label>
-          <div className="mt-2">
-            <input
-              value={upperTick}
-              onChange={(e) => handleUpperTickChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="upperTick"
-              id="upperTick"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="token1Amount"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Amount
-          </label>
-          <div className="mt-2">
-            <input
-              value={token1Amount}
-              onChange={(e) => handleToken1AmountChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="token1Amount"
-              id="token1Amount"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="token2Amount"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Amount
-          </label>
-          <div className="mt-2">
-            <input
-              value={token2Amount}
-              onChange={(e) => handleToken2AmountChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="token2Amount"
-              id="token2Amount"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="minToken1Amount"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Minimal amount of token1
-          </label>
-          <div className="mt-2">
-            <input
-              value={minToken1Amount}
-              onChange={(e) => handleMinToken1AmountChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="minToken1Amount"
-              id="minToken1Amount"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-        <div className="sm:col-span-2">
-          <label
-            htmlFor="minToken2Amount"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Minimal amount of token2
-          </label>
-          <div className="mt-2">
-            <input
-              value={minToken2Amount}
-              onChange={(e) => handleMinToken2AmountChange(e.target.value)}
-              onFocus={(e) =>
-                e.target.addEventListener(
-                  "wheel",
-                  function (e) {
-                    e.preventDefault();
-                  },
-                  { passive: false }
-                )
-              }
-              step="any"
-              type="number"
-              name="minToken2Amount"
-              id="minToken2Amount"
-              autoComplete="family-name"
-              className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
+            <span>Open LP position</span>
+          </h1>
+          <div className="flex">
+            <div className="flex justify-between w-full mt-4 flex-col mr-8 mb-10 bg-beige p-8 rounded-lg">
+              <div>
+                <div className="flex flex-row justify-between mb-10">
+                  <TokenSelector
+                    getTokenSelected={getToken1Selected}
+                    token={token1}
+                  />
+                  <TokenSelector
+                    getTokenSelected={getToken2Selected}
+                    token={token2}
+                    token1={token1}
+                  />
+                </div>
 
-        <div className="sm:col-span-4">
-          {token1 !== undefined &&
-          token2 !== undefined &&
-          minToken1Amount !== undefined &&
-          minToken2Amount !== undefined &&
-          lowerTick !== undefined &&
-          token1Amount !== undefined &&
-          upperTick !== undefined &&
-          selectedFee !== undefined &&
-          token2Amount !== undefined &&
-          governorAddress !== undefined ? (
-            payload ? (
-              <CreatePositionButton
-                callDatas={callDatas}
-                values={values}
-                targets={targets}
-                descriptionHash={descriptionHash}
-                governorAddress={governorAddress}
-              />
-            ) : (
-              <div className="mt-10 flex justify-center ">
-                <button
-                  onClick={() => onGeretarePayloadClick()}
-                  className="border-2 border-grey-500 px-4 py-2 rounded-full hover:bg-green-100 h-12 bg-green-50"
-                >
-                  Generate Payload
-                </button>
-              </div>
-            )
-          ) : (
-            <div className="mt-10 flex justify-center ">
-              <div className="border-2 border-grey-500 px-4 py-2 rounded-full hover:bg-green-100 h-12 bg-green-50 opacity-25">
-                Generate Payload
+                <div className="flex flex-col mb-2">
+                  <h1 className="font-semibold text-xl mb-2">Supply</h1>
+                  <label
+                    htmlFor="token1Amount"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Amount
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      value={token1Amount}
+                      onChange={(e) => handleToken1AmountChange(e.target.value)}
+                      onFocus={(e) =>
+                        e.target.addEventListener(
+                          "wheel",
+                          function (e) {
+                            e.preventDefault();
+                          },
+                          { passive: false }
+                        )
+                      }
+                      step="any"
+                      type="number"
+                      name="token1Amount"
+                      id="token1Amount"
+                      autoComplete="family-name"
+                      className="h-20 px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="token2Amount"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Amount
+                  </label>
+                  <div className="mt-2 ">
+                    <input
+                      value={token2Amount}
+                      onChange={(e) => handleToken2AmountChange(e.target.value)}
+                      onFocus={(e) =>
+                        e.target.addEventListener(
+                          "wheel",
+                          function (e) {
+                            e.preventDefault();
+                          },
+                          { passive: false }
+                        )
+                      }
+                      step="any"
+                      type="number"
+                      name="token2Amount"
+                      id="token2Amount"
+                      autoComplete="family-name"
+                      className="h-20 px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          )}
+            <div className="flex justify-between w-full mt-4 flex-col mr-8 mb-10 ">
+              <div className="bg-beige p-8 rounded-lg">
+                <h1 className="font-semibold text-xl mb-2">Threshold</h1>
+                <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-4 row-span-2 ">
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="lowerTick"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Upper tick price
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        value={lowerTick}
+                        onChange={(e) => handleLowerTickChange(e.target.value)}
+                        onFocus={(e) =>
+                          e.target.addEventListener(
+                            "wheel",
+                            function (e) {
+                              e.preventDefault();
+                            },
+                            { passive: false }
+                          )
+                        }
+                        step="any"
+                        type="number"
+                        name="lowerTick"
+                        id="lowerTick"
+                        autoComplete="family-name"
+                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="upperTick"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Lower tick price
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        value={upperTick}
+                        onChange={(e) => handleUpperTickChange(e.target.value)}
+                        onFocus={(e) =>
+                          e.target.addEventListener(
+                            "wheel",
+                            function (e) {
+                              e.preventDefault();
+                            },
+                            { passive: false }
+                          )
+                        }
+                        step="any"
+                        type="number"
+                        name="upperTick"
+                        id="upperTick"
+                        autoComplete="family-name"
+                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="minToken1Amount"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Minimal amount of token1
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        value={minToken1Amount}
+                        onChange={(e) =>
+                          handleMinToken1AmountChange(e.target.value)
+                        }
+                        onFocus={(e) =>
+                          e.target.addEventListener(
+                            "wheel",
+                            function (e) {
+                              e.preventDefault();
+                            },
+                            { passive: false }
+                          )
+                        }
+                        step="any"
+                        type="number"
+                        name="minToken1Amount"
+                        id="minToken1Amount"
+                        autoComplete="family-name"
+                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor="minToken2Amount"
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Minimal amount of token2
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        value={minToken2Amount}
+                        onChange={(e) =>
+                          handleMinToken2AmountChange(e.target.value)
+                        }
+                        onFocus={(e) =>
+                          e.target.addEventListener(
+                            "wheel",
+                            function (e) {
+                              e.preventDefault();
+                            },
+                            { passive: false }
+                          )
+                        }
+                        step="any"
+                        type="number"
+                        name="minToken2Amount"
+                        id="minToken2Amount"
+                        autoComplete="family-name"
+                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>{" "}
+                </div>
+              </div>
+              <div className="flex flex-row bg-beige p-8 rounded-lg">
+                {fees.map((fee, index: number) => {
+                  return (
+                    <div key={index}>
+                      <FeeSelector
+                        getFeeSelected={getFeeSelected}
+                        fee={fee}
+                        selectedFee={selectedFee}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+          <div className="mb-12">
+            {token1 !== undefined &&
+            token2 !== undefined &&
+            minToken1Amount !== undefined &&
+            minToken2Amount !== undefined &&
+            lowerTick !== undefined &&
+            token1Amount !== undefined &&
+            upperTick !== undefined &&
+            selectedFee !== undefined &&
+            token2Amount !== undefined &&
+            governorAddress !== undefined ? (
+              payload ? (
+                <CreatePositionButton
+                  callDatas={callDatas}
+                  values={values}
+                  targets={targets}
+                  descriptionHash={descriptionHash}
+                  governorAddress={governorAddress}
+                />
+              ) : (
+                <div className="mt-4 flex justify-center ">
+                  <button
+                    onClick={() => onGeretarePayloadClick()}
+                    className="border-2 border-grey-500 px-4 py-2 rounded-full h-12 bg-black text-white"
+                  >
+                    Create governace proposal
+                  </button>
+                </div>
+              )
+            ) : (
+              <div className="mt-4 flex justify-center ">
+                <div className="border-2 border-grey-500 px-4 py-2 rounded-full  h-12 bg-black text-white opacity-25">
+                  Create governace proposal
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

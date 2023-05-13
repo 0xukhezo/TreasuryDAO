@@ -82,8 +82,12 @@ export default function Dao() {
     setDisplayType(type);
   };
 
+  const getDisplay = (type: string) => {
+    setDisplayType(type);
+  };
+
   return (
-    <div className="flex mt-14  flex-col">
+    <div className="flex mt-6 flex-col">
       {dao && (
         <div className="flex flex-col w-screen">
           {displayType === "uniswapPositions" && (
@@ -100,7 +104,32 @@ export default function Dao() {
               </Link>
               <ChevronRightIcon className="h-4 w-4 mx-1" />
               <Image width={20} height={20} alt="Chain Image" src={Uniswap} />
+
               <span className="font-semibold mt-1 mx-2">Uniswap Positions</span>
+            </div>
+          )}
+          {displayType === "uniswapPositionsOpen" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={20} height={20} alt="Chain Image" src={Uniswap} />
+              <button
+                onClick={() => setDisplayType("uniswapPositions")}
+                className="mx-2"
+              >
+                Uniswap Positions
+              </button>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <span className="font-semibold mx-2">Open LP position</span>
             </div>
           )}
           {displayType === "aavePositions" && (
@@ -211,6 +240,7 @@ export default function Dao() {
                   display={displayType}
                   timelockAddress={timelockAddress}
                   governorAddress={governorAddress}
+                  getDisplay={getDisplay}
                 />
               )}
         </div>

@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useContractRead } from "wagmi";
 
 import abi from "../../../abi/abis.json";
-import { ethers } from "ethers";
 import PoolData from "./PoolData";
+import Image from "next/image";
+
+import ethLogo from "../../../public/usdc.svg";
+import btcLogo from "../../../public/btc.svg";
+import { coinDataArbitrum } from "../../../utils/tokens";
+import UniswapConfirmationModal from "../Modal/UniswapConfirmationModal";
 
 interface PositionCardInfoInterface {
   token0: `0x${string}`;
@@ -30,6 +35,7 @@ function PositionCardInfo({
   const [token1Decimal, setToken1Decimal] = useState<number>();
   const [tickUp, setTickUp] = useState<number>();
   const [tickLow, setTickLow] = useState<number>();
+  const [modalView, setModalView] = useState<boolean>(false);
 
   const { data: dataToken0, isSuccess: isSuccessToken0 } = useContractRead({
     address: token0,
@@ -73,12 +79,47 @@ function PositionCardInfo({
     }
   }, [token1Decimal]);
 
+  const token0Info = Object.keys(coinDataArbitrum).find(
+    (clave) => clave.toLowerCase() === token0.toLowerCase()
+  );
+  const token1Info = Object.keys(coinDataArbitrum).find(
+    (clave) => clave.toLowerCase() === token1.toLowerCase()
+  );
+
+  const img0 = coinDataArbitrum[token0Info!][0].img as any;
+  const img1 = coinDataArbitrum[token1Info!][0].img as any;
+
+  const symbol0 = coinDataArbitrum[token0Info!][0].symbol as any;
+  const symbol1 = coinDataArbitrum[token1Info!][0].symbol as any;
+
   return (
-    <div className="flex flex-row">
-      {tickUp !== undefined && tickLow !== undefined && (
+    <div className="flex flex-row items-center grid grid-cols-5 ">
+      {tickUp !== undefined && tickLow !== undefined && img0 && (
         <>
-          <div className="mx-2">{tickUp.toFixed(2)}</div>
-          <div className="mx-2">{tickLow.toFixed(2)}</div>
+          <div className="flex mx-10">
+            <Image
+              width={20}
+              height={20}
+              alt="Chain Image"
+              src={img0.src}
+              className="z-10"
+            />
+            <Image
+              width={20}
+              height={20}
+              alt="Chain Image"
+              src={img1.src}
+              className="z-10 -mx-2"
+            />
+            <div className="font-semibold mx-4">
+              {symbol0} / {symbol1}
+            </div>
+          </div>
+
+          <div className="mx-10">{Number(fee) / 10000}%</div>
+          <div className="mx-10">
+            {tickUp.toFixed(2)}/{tickLow.toFixed(2)}
+          </div>
           {dataPool && (
             <PoolData
               dataPool={dataPool}
@@ -87,19 +128,13 @@ function PositionCardInfo({
               feeToken1={feeToken1}
             />
           )}
-          {/* <div className="mx-2">
-            {ethers.utils
-              .formatUnits(amount0.toString(), token0Decimal)
-              .toString()}
-          </div>
-          <div className="mx-2">
-            {ethers.utils
-              .formatUnits(amount1.toString(), token1Decimal)
-              .toString()}
-          </div> */}
-          <div className="mx-2">
-            {liquidity.toString() === "0" ? "Closed" : "Active"}
-          </div>
+          <button
+            className="border-2 border-black rounded-full p-2 mx-10"
+            onClick={() => setModalView(true)}
+          >
+            Close Position
+          </button>
+          {modalView && <UniswapConfirmationModal />}
         </>
       )}
     </div>

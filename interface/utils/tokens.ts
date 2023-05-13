@@ -1,7 +1,7 @@
-import btcLogo from '../public/ic_bitcoin.svg';
-import ethLogo from '../public/ic_ethereum.svg';
+import btcLogo from '../public/btc.svg';
+import ethLogo from '../public/eth.svg';
 import linkLogo from '../public/ic_link.svg';
-import usdcLogo from '../public/ic_usdc.svg';
+import usdcLogo from '../public/usdc.svg';
 
 export const coinDataArbitrum: {
     [key: string]: { img: string; symbol: string; }[];

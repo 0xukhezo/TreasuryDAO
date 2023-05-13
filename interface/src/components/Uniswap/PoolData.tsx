@@ -32,26 +32,10 @@ export default function PoolData({
     functionName: "feeGrowthGlobal0X128",
   });
 
-  useEffect(() => {
-    const positionData = data as Object;
-    console.log(data.sqrtPriceX96.toString());
-  }, [isSuccess]);
-
-  //   useEffect(() => {
-  //     console.log(feeGrowthInside0X128Data);
-  //     const feeGrowthInside0X128: any = feeGrowthInside0X128Data;
-  //     console.log(feeGrowthInside0X128Data, Number(feeToken0.toString()));
-  //     const feeToken0Value =
-  //       liquidity * Number(feeGrowthInside0X128.toString()) -
-  //       Number(feeToken0.toString()) /
-  //         Number(ethers.BigNumber.from(2).pow(128).toString());
-  //     console.log(feeToken0Value);
-  //   }, [isSuccessfeeGrowthInside0X128]);
-
   return (
     <div>
       {data !== undefined && data !== null && (
-        <div>
+        <div className="mx-10">
           {(
             (liquidity / Number(data.sqrtPriceX96.toString())) *
             10 ** 13

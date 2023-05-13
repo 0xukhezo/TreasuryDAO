@@ -49,12 +49,24 @@ export default function UniswapPositions({
 
   return (
     <div className="mx-14 mt-10">
-      <div className="flex">
+      <div className="flex justify-between">
         <h2 className="text-2xl my-2 text-superfluid-100 leading-8 font-bold">
           Current LP Positions
         </h2>
+        <button className=" px-6 py-1 rounded-full  h-12 bg-black text-white">
+          Open LP Position
+        </button>
       </div>
       <div>
+        {uniswapPositionsID?.length !== 0 && (
+          <div className="flex flex-row grid grid-cols-5 mt-6">
+            <div className="mx-10"></div>
+            <div className="mx-10">Fee Tier</div>
+            <div className="mx-12">Price Range</div>
+            <div className="mx-6">Liquidity</div>
+          </div>
+        )}
+
         {uniswapPositionsID?.map((id: string, index: number) => {
           return (
             <div key={index}>

@@ -2,7 +2,12 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import TokenCard from "../Uniswap/TokenCard";
-import coinData from "../../../utils/tokens";
+import { useNetwork } from "wagmi";
+import {
+  coinDataOptimist,
+  coinDataArbitrum,
+  coinDataPolygon,
+} from "../../../utils/tokens";
 
 interface TokensModalInterface {
   getOpenModal: (openmodal: boolean) => void;
@@ -17,8 +22,25 @@ export default function TokensModal({
   token1,
   stable,
 }: TokensModalInterface) {
+  const { chain } = useNetwork();
   const [open, setOpen] = useState(true);
-  let tokens = Object.entries(coinData);
+  let tokens = Object.entries(coinDataArbitrum);
+  let coins = coinDataArbitrum;
+
+  switch (chain?.network) {
+    case "optimism":
+      tokens = Object.entries(coinDataOptimist);
+      coins = coinDataOptimist;
+      break;
+    case "arbitrum":
+      tokens = Object.entries(coinDataArbitrum);
+      coins = coinDataArbitrum;
+      break;
+    case "matic":
+      tokens = Object.entries(coinDataPolygon);
+      coins = coinDataPolygon;
+      break;
+  }
 
   const closeModal = (token?: any) => {
     if (token) {
@@ -29,19 +51,19 @@ export default function TokensModal({
   };
 
   if (token1) {
-    tokens = Object.entries(coinData).filter((token) => {
+    tokens = Object.entries(coins).filter((token) => {
       return token[0] !== token1[0];
     });
   }
 
   if (stable === "stable") {
-    tokens = Object.entries(coinData).filter((token) => {
+    tokens = Object.entries(coins).filter((token) => {
       return token[0] === "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8";
     });
   }
 
   if (stable === "noStable") {
-    tokens = Object.entries(coinData).filter((token) => {
+    tokens = Object.entries(coins).filter((token) => {
       return token[0] !== "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8";
     });
   }

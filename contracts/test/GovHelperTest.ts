@@ -4,11 +4,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { expect } from 'chai'
 import { UtilsTest } from './UtilsTest'
-import { GovHelper__factory, GovHelper, IERC20, IWETH9, IPoolAddressesProvider, AaveProtocolDataProvider } from "../typechain-types"
+import { GovHelper__factory, GovHelper, IWETH, IERC20, ERC20, IPoolAddressesProvider, GovToken, GovFactory, Gov, TimelockController } from "../typechain-types"
 import { abi as VariableDebtTokenABI } from '@aave/core-v3/artifacts/contracts/protocol/tokenization/VariableDebtToken.sol/VariableDebtToken.json';
 import { abi as AaveProtocolDataProviderABI } from '@aave/core-v3/artifacts/contracts/misc/AaveProtocolDataProvider.sol/AaveProtocolDataProvider.json'
-import JSBI from 'jsbi'
-
+import { DAOCreatedEventFilter, DAOCreatedEventObject } from '../typechain-types/artifacts/contracts/GovFactory';
 
 
 const wethAddr = "0x82af49447d8a07e3bd95bd0d56f35241523fbab1";
@@ -33,25 +32,57 @@ const poolAddressProviderAddr = "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb"
 
 describe('InvestmentDAO', function () {
     async function initialSetUp() {
-        const [deployer, alvaro] = await ethers.getSigners()
+        const [deployer] = await ethers.getSigners()
 
-        const poolDataProvider = await ethers.getContractAt(AaveProtocolDataProviderABI, poolDataProviderAddr)
-        const usdc: IERC20 = await ethers.getContractAt("IERC20", usdcAddr)
+        const { govFactory } = await UtilsTest.deployDaoFactory();
+
+        const tx = await govFactory.deployDao(
+            process.env.DAO_TOKEN_NAME!,
+            process.env.DAO_TOKEN_SYMBOL!,
+            process.env.MIN_DELAY_TIMELOCK!,
+            process.env.DAO_NAME!,
+            process.env.INITIAL_VOTING_DELAY!,
+            process.env.INITIAL_VOTING_PERIOD!,
+            process.env.QUORUM!,
+            process.env.INITIAL_PROPOSAL_THRESHOLD!,
+            process.env.DAO_TOKEN_AMOUNT_PREMINT!
+        )
+
+        const filter: DAOCreatedEventFilter = await govFactory.filters.DAOCreated(deployer.address)
+        const logs: Array<any> = await govFactory.queryFilter(filter)
+        const event: DAOCreatedEventObject = logs[0].args
+        const { token: tokenAddr, helper: helperAddr, timelock: timelockAddr, gov: govAddr } = event
+    
+        const token: GovToken = await ethers.getContractAt('GovToken', tokenAddr)
+        const gov: Gov = await ethers.getContractAt('Gov', govAddr)
+        const timelock: TimelockController = await ethers.getContractAt('TimelockController', timelockAddr)
+        const helper: GovHelper = await ethers.getContractAt('GovHelper', helperAddr)
+
+        //Delegate votes
+        await token.connect(deployer).delegate(deployer.address)
+
+        //Capitalize timelock treasury with impersonationSigner
+        const usdc: ERC20 = await ethers.getContractAt("ERC20", usdcAddr)
         const userWithUsdc = await ethers.getImpersonatedSigner("0x4943b0c9959dcf58871a799dfb71bece0d97c9f4");
-
         const weth = await ethers.getContractAt("IWETH9", wethAddr);
         const userWithWeth = await ethers.getImpersonatedSigner("0xc6d973b31bb135caba83cf0574c0347bd763ecc5");
-
-        await usdc.connect(userWithUsdc).transfer(deployer.address, usdcInitial)
+        await usdc.connect(userWithUsdc).transfer(timelock.address, usdcInitial)
+        
+        
+        const poolDataProvider = await ethers.getContractAt(AaveProtocolDataProviderABI, poolDataProviderAddr)
+    
         //await weth.connect(userWithWeth).transfer(deployer.address, wethCollateral)
 
-        const govHelperFactory: GovHelper__factory = await ethers.getContractFactory("GovHelper")
+        /*const govHelperFactory: GovHelper__factory = await ethers.getContractFactory("GovHelper")
         const govHelper: GovHelper = await govHelperFactory.deploy(poolAddressProviderAddr, swapRouterAddr, oracleUsdcUsd)
-        await govHelper.deployed()
+        await govHelper.deployed()*/
 
         return {
             deployer,
-            govHelper,
+            helper,
+            timelock,
+            token,
+            gov,
             usdc,
             weth,
             poolDataProvider
@@ -60,23 +91,46 @@ describe('InvestmentDAO', function () {
 
     describe('1.) Aave', function () {
         it('Should execute natural short', async function () {
-            const { govHelper, usdc, weth, deployer, poolDataProvider } = await loadFixture(initialSetUp)
+            const {  deployer, helper, timelock, token, gov, usdc, weth, poolDataProvider } = await loadFixture(initialSetUp)
 
             const aaveAdrrProvider: IPoolAddressesProvider = await ethers.getContractAt("IPoolAddressesProvider", "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb")
             const aavePoolAddr: string = await aaveAdrrProvider.getPool()
             const pool = await ethers.getContractAt("IPool", aavePoolAddr)
             const wethData = await pool.getReserveData(wethAddr)
-
             const variableDebtToken = await ethers.getContractAt(VariableDebtTokenABI, wethData.variableDebtTokenAddress)
-            await variableDebtToken.connect(deployer).approveDelegation(govHelper.address, wethBorrow)
-
+            
             const amountIn = ethers.utils.parseUnits("1000", "6")
-            usdc.connect(deployer).approve(govHelper.address, amountIn)
 
-            const balanceBefore = await usdc.balanceOf(deployer.address)
+            const oraculoUsdcWeth = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612"
+            const { callDatas, targets, values, descriptionHash } = await createProposeOpenNaturalPosition(helper, usdc, amountIn.toString(), weth, wethBorrow.toString(),"2", oraculoUsdcWeth,"50","500",variableDebtToken)
+
+            const propose = await gov.connect(deployer).propose(targets, values, callDatas, descriptionHash)
+
+            const proposeReceipt = await propose.wait(1)
+            const proposalId = proposeReceipt.events![0].args!.proposalId.toString()
+
+            //Skip voting delay
+            await UtilsTest.skipBlock(process.env.INITIAL_VOTING_DELAY!)
+            await gov.connect(deployer).castVote(proposalId, 1)
+            //Skip voting period
+            await UtilsTest.skipBlock(process.env.INITIAL_VOTING_PERIOD!)
+
+            //As we have set up time lock we can not execute the proposal directly
+            const desc = ethers.utils.id(descriptionHash)
+            await gov.queue(targets, values, callDatas, desc)
+
+            //Skip delay timelock
+            await UtilsTest.skipBlock(process.env.MIN_DELAY_TIMELOCK!)
+
+            const balanceBefore = await usdc.balanceOf(timelock.address)
             console.log(`USDC Before ${ethers.utils.formatUnits(balanceBefore, "6")}`)
 
-            await govHelper.borrowSwap(usdcAddr, amountIn, wethAddr, wethBorrow, 2, "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", 50, 500)
+            await (await gov.connect(deployer).execute(targets, values, callDatas, desc)).wait(1)
+
+            /*await variableDebtToken.connect(deployer).approveDelegation(govHelper.address, wethBorrow)
+            usdc.connect(deployer).approve(govHelper.address, amountIn)
+
+            await govHelper.borrowSwap(usdcAddr, amountIn, wethAddr, wethBorrow, 2, "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612", 50, 500)**/
 
             const balanceAfter = await usdc.balanceOf(deployer.address)
             console.log(`USDC After ${ethers.utils.formatUnits(balanceAfter, "6")}`)
@@ -85,7 +139,7 @@ describe('InvestmentDAO', function () {
 
             //console.log(balanceDebt)
 
-            ethers.provider.send("evm_increaseTime", [24 * 3600]);
+            /*ethers.provider.send("evm_increaseTime", [24 * 3600]);
             ethers.provider.send("evm_mine", []);
 
             //const balanceDebtAfterDay = await variableDebtToken.connect(deployer).balanceOf(deployer.address);
@@ -105,16 +159,55 @@ describe('InvestmentDAO', function () {
             console.log(usdcBalanceBeforeWithdraw)
             await pool.withdraw(usdcAddr, balanceAUsdc, deployer.address)
             const usdcBalanceAfterWithdraw = await usdc.connect(deployer).balanceOf(deployer.address)
-            console.log(usdcBalanceAfterWithdraw)
+            console.log(usdcBalanceAfterWithdraw)*/
 
 
             //console.log(BigNumber.from("574237012914548743819289237524766").shr(128))
             //console.log()
 
-
         })
     })
 })
+
+
+async function createProposeOpenNaturalPosition(
+    helper: GovHelper,
+    collateralToken: ERC20,
+    collateralAmount: string,
+    borrowToken: IWETH,
+    borrowAmount: string,
+    interestRateMode: string,
+    priceFeed: string,
+    slippage: string,
+    poolFee: string,
+    variableDebtToken: any
+  ) {
+
+    
+    let callDatas = []
+    let targets = []
+    let values = []
+
+    //Approve delegation
+    callDatas.push(variableDebtToken.interface.encodeFunctionData('approveDelegation', [helper.address,borrowAmount]))
+    targets.push(variableDebtToken.address)
+    values.push('0')
+
+    //Approve USDC
+    callDatas.push(collateralToken.interface.encodeFunctionData('approve', [helper.address, collateralAmount]))
+    targets.push(collateralToken.address)
+    values.push('0')
+   
+    //BorrowSwap
+    const params: any = [collateralToken.address,collateralAmount,borrowToken.address,borrowAmount,interestRateMode,priceFeed,slippage,poolFee]
+    callDatas.push(helper.interface.encodeFunctionData('borrowSwap', [...params]).toString())
+    targets.push(helper.address)
+    values.push('0')
+
+    const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('Open natural position'))
+  
+    return { callDatas, targets, values, descriptionHash }
+  }
 
 
 

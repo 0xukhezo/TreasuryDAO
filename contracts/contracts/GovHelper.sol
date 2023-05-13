@@ -19,7 +19,8 @@ contract GovHelper is Ownable {
         uint256 collateralAmount,
         address borrowToken,
         uint256 borrowAmount,
-        uint256 interestRateMode
+        uint256 interestRateMode,
+        int256 price
     );
 
     event NaturalPositionClosed(
@@ -70,7 +71,8 @@ contract GovHelper is Ownable {
 
         require(succeededOut, "GovHelper: Failed to transfer amountOut");
 
-        emit NaturalPositionCreated(collateralToken, collateralAmount, borrowToken, borrowAmount, interestRateMode);
+        (,int priceUsd,,,) = priceFeed.latestRoundData();
+        emit NaturalPositionCreated(collateralToken, collateralAmount, borrowToken, borrowAmount, interestRateMode, priceUsd);
         
     }
 

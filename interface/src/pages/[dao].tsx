@@ -17,7 +17,6 @@ import Link from "next/link";
 
 export default function Dao() {
   const router = useRouter();
-
   const [timelockAddress, setTimelockAddress] = useState<`0x${string}`>();
   const [governorAddress, setGovernorAddress] = useState<`0x${string}`>();
   const [displayType, setDisplayType] = useState<string>("daoInfo");
@@ -25,7 +24,7 @@ export default function Dao() {
 
   async function fetchDao(daoName: string) {
     const queryBody = `query {
-        daos(where: {gov_: {name: "${daoName}"}}) {
+        daos(where: {gov_: {id: "${daoName}"}}) {
           id
           gov {
             name

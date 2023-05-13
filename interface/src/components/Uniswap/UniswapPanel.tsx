@@ -8,7 +8,7 @@ import { useProvider } from "wagmi";
 import { INonfungiblePositionManager } from "../../../types/INonfungiblePositionManager";
 import abi from "../../../abi/abis.json";
 
-interface UniswapPositionsInterface {
+interface UniswapPanelInterface {
   display: string;
   timelockAddress: `0x${string}`;
   governorAddress: `0x${string}`;
@@ -20,7 +20,7 @@ export default function UniswapPanel({
   timelockAddress,
   governorAddress,
   getDisplay,
-}: UniswapPositionsInterface) {
+}: UniswapPanelInterface) {
   const provider = useProvider();
   const [uniswapPositionsID, setUniswapPositionsID] = useState<string[]>();
   const [displayPositions, setDisplayPositions] = useState<string>(display);
@@ -40,6 +40,9 @@ export default function UniswapPanel({
       timelockAddress,
       null
     );
+
+    console.log(filter);
+
     const logs: Array<any> = await nonFungiblePositionManager.queryFilter(
       filter
     );

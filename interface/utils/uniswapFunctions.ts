@@ -64,8 +64,6 @@ export async function createProposalClosePositionUniswap(tokenId: string, liquid
     amount1Max: maxUint128
   }
 
-  console.log(paramCollect)
-
   callDatas.push(nonFungiblePositionManager.interface.encodeFunctionData('collect', [paramCollect]))
   targets.push(nonFungiblePositionManager.address)
   values.push('0')

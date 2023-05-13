@@ -69,7 +69,7 @@ export default function Home() {
           daos.map((dao: any, index: number) => {
             return (
               <Link
-                href={`/${dao.gov.name}`}
+                href={`/${dao.gov.id}`}
                 key={index}
                 className="mx-8 my-2 px-10  rounded-lg bg-beige py-8 flex items-center justify-between "
               >

@@ -32,6 +32,11 @@ export default function AAVEPositionCard({
 }: AAVEPositionCardinterface) {
   const [positionAAVE, setPositionAAVE] = useState<any[]>();
   const [modalView, setModalView] = useState<boolean>(false);
+  const [callDatas, setCallDatas] = useState<string[]>();
+  const [values, setValues] = useState<string[]>();
+  const [targets, setTargets] = useState<string[]>();
+  const [descriptionHash, setDescriptionHash] = useState<string>();
+
   const { data, isSuccess } = useContractRead({
     address: debtToken.token,
     abi: abi.abiDebt,
@@ -95,6 +100,10 @@ export default function AAVEPositionCard({
               <ConfirmationModal
                 governorAddress={governorAddress}
                 display="aave"
+                callDatas={callDatas}
+                values={values}
+                targets={targets}
+                descriptionHash={descriptionHash}
               />
             )}
           </div>

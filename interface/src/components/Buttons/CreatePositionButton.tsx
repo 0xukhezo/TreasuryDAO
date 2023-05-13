@@ -48,7 +48,7 @@ export default function CreatePositionButton({
   return (
     <>
       <div>
-        <div className="mt-8 flex justify-center ">
+        <div className="mt-4 flex justify-center ">
           <button
             onClick={() => onCreatePositionClick()}
             className="px-4 py-2 rounded-full h-12 bg-black text-white"

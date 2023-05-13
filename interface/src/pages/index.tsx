@@ -36,7 +36,6 @@ export default function Home() {
 
     try {
       let response = await client.query({ query: Daos(queryBody) });
-
       setDaos(response.data.daos);
     } catch (err) {
       console.log({ err });

@@ -64,15 +64,7 @@ export default function OpenAAVEPosition({
   };
 
   const onGeretarePayloadClick = async () => {
-    if (
-      token1 !== undefined &&
-      token2 !== undefined &&
-      selectedFee !== undefined &&
-      token1Amount !== undefined &&
-      token2Amount !== undefined &&
-      token1Amount > 0 &&
-      token2Amount > 0
-    ) {
+    if (token1 !== undefined && selectedFee !== undefined) {
       const token1Address = token1[0] as string;
       const token2Address = token2[0] as string;
       const compareTokens =
@@ -80,84 +72,18 @@ export default function OpenAAVEPosition({
           .toLowerCase()
           .localeCompare(token2Address.toLocaleLowerCase()) == 1;
 
-      loadData(
-        selectedFee,
-        minToken1Amount,
-        minToken2Amount,
-        token1Address,
-        token2Address,
-        token1Amount,
-        token2Amount,
-        compareTokens
-      ).then(() => setPayload(true));
+      loadData(selectedFee).then(() => setPayload(true));
     }
   };
 
-  async function loadData(
-    selectedFee: number,
-    minToken1Amount: number,
-    minToken2Amount: number,
-    token1: string,
-    token2: string,
-    lowerTick: number,
-    token1Amount: number,
-    upperTick: number,
-    token2Amount: number,
-    compareTokens: boolean
-  ) {
+  async function loadData(selectedFee: number) {
     const nonFungiblePositionManager = new ethers.Contract(
       nonFungiblePositionManagerAddr,
       abi.abiINonfungiblePositionManager,
       provider
     ) as INonfungiblePositionManager;
 
-    const token1ERC20 = new ethers.Contract(
-      compareTokens ? token2 : token1,
-      abi.abiERC20,
-      provider
-    ) as ERC20;
-    const token2ERC20 = new ethers.Contract(
-      compareTokens ? token1 : token2,
-      abi.abiERC20,
-      provider
-    ) as ERC20;
-
-    const decimalToken1 = await token1ERC20.decimals();
-    const decimalToken2 = await token2ERC20.decimals();
-
-    const finalToken1Amount = ethers.utils.parseUnits(
-      token1Amount.toString(),
-      compareTokens ? decimalToken2.toString() : decimalToken1.toString()
-    );
-    const finalToken2Amount = ethers.utils.parseUnits(
-      token2Amount.toString(),
-      compareTokens ? decimalToken1.toString() : decimalToken2.toString()
-    );
-
-    const minimalToken1Amount = ethers.utils.parseUnits(
-      minToken1Amount.toString(),
-      compareTokens ? decimalToken1.toString() : decimalToken2.toString()
-    );
-    const minimalToken2Amount = ethers.utils.parseUnits(
-      minToken2Amount.toString(),
-      compareTokens ? decimalToken2.toString() : decimalToken1.toString()
-    );
-
-    const title = "Open a pool position in Uniswap";
-    const result = await createProposalOpenPositionUniswap(
-      minimalToken1Amount.toString(),
-      minimalToken2Amount.toString(),
-      selectedFee.toString(),
-      token1ERC20,
-      finalToken1Amount,
-      token2ERC20,
-      finalToken2Amount,
-      nonFungiblePositionManager,
-      finalLowerTick,
-      finalUpperTick,
-      title,
-      "Open a pool position in Uniswap with token1 and token2"
-    );
+    const result = await createProposalOpenPositionUniswap();
 
     setCallDatas(result.callDatas);
     setValues(result.values);

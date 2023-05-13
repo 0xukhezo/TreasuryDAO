@@ -43,7 +43,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchDaos();
-  });
+  }, []);
 
   return (
     <div>

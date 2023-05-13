@@ -7,32 +7,34 @@ interface DaoInfoPanelInterface {
 export default function DaoInfoPanel({ dao }: DaoInfoPanelInterface) {
   return (
     <div>
-      <div className="grid gid-cols-3">
-        <div>
-          <span>Holders</span>
-          <span>{dao.gov.proposalThreshold}</span>
-        </div>
+      {dao !== undefined && (
+        <div className="grid grid-cols-5 mx-10">
+          <div className="flex flex-col">
+            <span>Holders</span>
+            <span>{dao.gov.proposalThreshold}</span>
+          </div>
 
-        <div>
-          <span>Tokens neccesary to vote</span>
-          <span>{dao.gov.proposalThreshold}</span>
-        </div>
+          <div className="flex flex-col">
+            <span>Tokens neccesary to vote</span>
+            <span>{dao.gov.proposalThreshold}</span>
+          </div>
 
-        <div>
-          <span>Quorum</span>
-          <span>{dao.gov.quorum}</span>
-        </div>
+          <div className="flex flex-col">
+            <span>Quorum</span>
+            <span>{dao.gov.quorum}</span>
+          </div>
 
-        <div>
-          <span>Proposals</span>
-          <span>{dao.gov.proposals}</span>
-        </div>
+          <div className="flex flex-col">
+            <span>Proposals</span>
+            <span>{dao.gov.proposals}</span>
+          </div>
 
-        <div>
-          <span>In quorum</span>
-          <span>{dao.gov.proposalsQueued}</span>
+          <div className="flex flex-col">
+            <span>In quorum</span>
+            <span>{dao.gov.proposalsQueued}</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

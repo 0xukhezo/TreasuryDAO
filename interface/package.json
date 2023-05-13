@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aave/core-v3": "^1.17.2",
     "@apollo/client": "^3.7.11",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.17",
@@ -17,6 +18,7 @@
     "@types/node": "18.15.11",
     "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
+    "@uniswap/sdk": "^3.0.3",
     "@uniswap/v3-sdk": "^3.9.0",
     "autoprefixer": "^10.4.14",
     "eslint": "8.38.0",

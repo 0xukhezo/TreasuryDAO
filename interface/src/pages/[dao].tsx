@@ -5,7 +5,6 @@ import { useNetwork } from "wagmi";
 import { BarsArrowDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { client, Daos } from "./api/Daos";
-import GMXPanel from "@/components/GMX/GMXPanel";
 import UniswapPanel from "@/components/Uniswap/UniswapPanel";
 import DaoInfoPanel from "@/components/Dao/DaoInfoPanel";
 import GMXLateralBarButtons from "@/components/Buttons/GMXLateralBarButtons";
@@ -75,7 +74,7 @@ export default function Dao() {
 
   useEffect(() => {
     fetchDao(router.query.dao as string);
-  });
+  }, []);
 
   const setDisplay = (type: string) => {
     setDisplayType(type);
@@ -100,11 +99,7 @@ export default function Dao() {
             </button>
           </div>
           <div className="flex flex-col items-center">
-            {chain?.id === 42161 ? (
-              <GMXLateralBarButtons setDisplay={setDisplay} />
-            ) : (
-              <AAVELateralBarbuttons setDisplay={setDisplay} />
-            )}
+            <AAVELateralBarbuttons setDisplay={setDisplay} />
             <UniswapLateralBarButtons setDisplay={setDisplay} />
           </div>
         </div>
@@ -122,15 +117,8 @@ export default function Dao() {
           <DaoInfoPanel dao={dao} />
         ) : timelockAddress &&
           governorAddress &&
-          (displayType === "gmxPositions" ||
-            displayType === "gmxOpenPosition") ? (
-          <GMXPanel
-            display={displayType}
-            timelockAddress={timelockAddress}
-            governorAddress={governorAddress}
-          />
-        ) : displayType === "gmxPositions" ||
-          displayType === "gmxOpenPosition" ? (
+          (displayType === "aavePositions" ||
+            displayType === "aaveOpenPosition") ? (
           timelockAddress &&
           governorAddress && (
             <AAVEPanel

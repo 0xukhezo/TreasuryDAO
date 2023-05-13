@@ -1,0 +1,8 @@
+{
+  "arbitrum-one": {
+    "GovFactory": {
+      "address": "0xB803f727EB6a64E33873600D616F253619f252f9",
+      "startBlock": 90285130
+    }
+  }
+}

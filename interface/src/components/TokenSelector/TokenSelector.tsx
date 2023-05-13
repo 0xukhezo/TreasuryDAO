@@ -45,7 +45,7 @@ export default function TokenSelector({
               height={100}
               alt="Token Image"
               src={img.src}
-              className="h-8 w-8 rounded-full p-1"
+              className="h-6 w-6 rounded-full"
             />
             <div className="ml-4">{token[1][0].symbol}</div>{" "}
             <ChevronDownIcon className="h-6 w-6 ml-6" aria-hidden="true" />

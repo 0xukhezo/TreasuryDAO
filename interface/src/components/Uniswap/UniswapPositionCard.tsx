@@ -23,6 +23,7 @@ export default function UniswapPositionCard({
 
   useEffect(() => {
     const positionData = data as Object;
+    console.log(positionData);
     setDataPosition(positionData);
   }, [isSuccess]);
 

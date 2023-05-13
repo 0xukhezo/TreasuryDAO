@@ -85,7 +85,7 @@ export default function Dao() {
   const getDisplay = (type: string) => {
     setDisplayType(type);
   };
-
+  console.log(displayType);
   return (
     <div className="flex mt-6 flex-col">
       {dao && (
@@ -268,6 +268,16 @@ export default function Dao() {
                   getDisplay={getDisplay}
                 />
               )}
+          {displayType === "aavePositionsOpen" &&
+            timelockAddress &&
+            governorAddress && (
+              <AAVEPanel
+                display={displayType}
+                timelockAddress={timelockAddress}
+                governorAddress={governorAddress}
+                getDisplay={getDisplay}
+              />
+            )}
         </div>
       )}
     </div>

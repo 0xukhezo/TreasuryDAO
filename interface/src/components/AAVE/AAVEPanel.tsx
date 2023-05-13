@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNetwork } from "wagmi";
 import {
   coinDataArbitrum,
@@ -70,12 +70,11 @@ export default function AAVEPanel({
     setDisplayPositions("aavePositionsOpen");
     getDisplay(display);
   };
-
+  console.log(displayPositions);
   return (
     <div>
-      {display === "aavePositions" ? (
-        <div>
-          {" "}
+      {displayPositions !== "aavePositionsOpen" ? (
+        <>
           <div className="flex justify-between mx-14 mt-8">
             <h2 className="text-2xl my-2 text-superfluid-100 leading-8 font-bold">
               Current positions
@@ -110,7 +109,7 @@ export default function AAVEPanel({
               </div>
             );
           })}
-        </div>
+        </>
       ) : (
         <OpenAAVEPosition
           governorAddress={governorAddress}

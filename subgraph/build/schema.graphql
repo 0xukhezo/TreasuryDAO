@@ -1,0 +1,127 @@
+type Factory @entity {
+  # factory address
+  id: ID!
+  # amount of daos created
+  daoCount: BigInt!
+}
+
+type Dao @entity {
+  id: ID!
+  gov: Gov!
+  timelock: Timelock!
+  token: Token! 
+  sender: Bytes!
+  transactionHash: Bytes!
+}
+
+type Gov @entity {
+  # gov address
+  id: ID!
+
+  # Gov name
+  name: String!
+
+  # Proposal threshold
+  proposalThreshold: BigInt!
+
+  # Quorum
+  quorum: BigInt!
+  
+  # Number of proposals created
+  proposals: BigInt!
+   
+  # Number of proposals currently queued for execution
+  proposalsQueued: BigInt!
+}
+
+type Token @entity {
+  id: ID!
+
+  # Token name
+  name: String!
+
+  # Token symbol
+  symbol: String!
+
+  # Total supply
+  supply: BigInt!
+
+  # Total number of governance token holder
+  holders: BigInt!
+  
+  # Total number of delegates that held delegated votes
+  totalDelegates: BigInt!
+}
+
+type TokenHolder @entity {
+  #A TokenHolder is any address that holds any amount of Compound Tokens, the id used is the blockchain address."
+  id: ID!
+
+  #Token balance of this address expressed with decimals()"
+  tokenBalance: BigInt!
+
+}
+
+type Timelock @entity {
+  id: ID!
+}
+
+type NaturalPosition @entity{
+  id: ID!
+
+  # Timelock
+  timelock: String!
+
+  # Token in
+  tokenIn: String!
+
+  # Amount to in
+  amountIn: BigInt!
+
+  # Token to borrow
+  tokenBorrow: String!
+
+  #Price
+  price: BigInt!
+
+  # Position is open
+  isOpen: Boolean!
+
+}
+
+type Proposal @entity {
+  id: ID!
+
+  #Targets data for the change
+  targets: [Bytes!]
+
+  #Values data for the change
+  values: [BigInt!]
+
+  #Call data for the change
+  calldatas: [Bytes!]
+
+  #Signature data for the change
+  signatures: [String!]
+
+  #String description of the change
+  description: String!
+
+  #Status of the proposal"
+  status: ProposalStatus!
+
+  #Block number from where the voting starts
+  startBlock: BigInt!
+
+  #Block number from where the voting ends
+  endBlock: BigInt!
+
+}
+
+enum ProposalStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+  QUEUED
+  EXECUTED
+}

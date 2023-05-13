@@ -1254,6 +1254,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/identicon.js@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@types/identicon.js/-/identicon.js-2.3.1.tgz#bbfe440a3229d6930c12d933ebcbe8603957ea75"
+  integrity sha512-QyPIfllzfVTHVJ/xX5+cOKpWuX7Zv0EKQbzTCbIn6QjMOg4bn1j73Av1LIIvRqkDV+TErJuonwZg/IOl4tbPDQ==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
@@ -3725,6 +3730,11 @@ humanize-ms@^1.2.1:
   integrity sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==
   dependencies:
     ms "^2.0.0"
+
+identicon.js@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/identicon.js/-/identicon.js-2.3.3.tgz#c505b8d60ecc6ea13bbd991a33964c44c1ad60a1"
+  integrity sha512-/qgOkXKZ7YbeCYbawJ9uQQ3XJ3uBg9VDpvHjabCAPp6aRMhjLaFAxG90+1TxzrhKaj6AYpVGrx6UXQfQA41UEA==
 
 ieee754@^1.2.1:
   version "1.2.1"

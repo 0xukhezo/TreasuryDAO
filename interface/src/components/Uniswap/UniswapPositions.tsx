@@ -48,10 +48,10 @@ export default function UniswapPositions({
   }, []);
 
   return (
-    <div className="mx-96 mt-10">
+    <div className="mx-14 mt-10">
       <div className="flex">
         <h2 className="text-2xl my-2 text-superfluid-100 leading-8 font-bold">
-          Uniswap Positions
+          Current LP Positions
         </h2>
       </div>
       <div>

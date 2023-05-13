@@ -8,6 +8,11 @@ module.exports = {
         containerUniswap: "800px",
       },
       width: { container: "798px", containerCampaign: "798px" },
+      colors: {
+        almostBlack: "#242423",
+        beige: "#ECE4DD",
+        beigeLight: "#F5F1EE",
+      },
     },
   },
   plugins: [],

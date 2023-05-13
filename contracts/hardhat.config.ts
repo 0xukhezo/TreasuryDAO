@@ -2,6 +2,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import '@typechain/hardhat'
 import "@nomiclabs/hardhat-etherscan";
+import "hardhat-contract-sizer"
 import * as dotenv from 'dotenv'
 dotenv.config()
 

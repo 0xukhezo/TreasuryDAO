@@ -11,7 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
-    "hardhat": "^2.14.0"
+    "hardhat": "^2.14.0",
+    "hardhat-contract-sizer": "^2.8.0"
   },
   "dependencies": {
     "@aave/core-v3": "^1.17.2",

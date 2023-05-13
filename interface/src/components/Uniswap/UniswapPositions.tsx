@@ -72,7 +72,11 @@ export default function UniswapPositions({
         {uniswapPositionsID?.map((id: string, index: number) => {
           return (
             <div key={index}>
-              <UniswapPositionCard id={id} governorAddress={governorAddress} />
+              <UniswapPositionCard
+                id={id}
+                governorAddress={governorAddress}
+                timelockAddress={timelockAddress}
+              />
             </div>
           );
         })}

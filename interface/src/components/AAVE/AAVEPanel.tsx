@@ -70,7 +70,7 @@ export default function AAVEPanel({
     setDisplayPositions("aavePositionsOpen");
     getDisplay(display);
   };
-  console.log(displayPositions);
+
   return (
     <div>
       {displayPositions !== "aavePositionsOpen" ? (

@@ -90,6 +90,7 @@ export default function UniswapPanel({
                   <UniswapPositionCard
                     id={id}
                     governorAddress={governorAddress}
+                    timelockAddress={timelockAddress}
                   />
                 </div>
               );

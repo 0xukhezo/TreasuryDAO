@@ -29,12 +29,14 @@ export default function Home() {
           }
           token {
             id
+            holders
           }
         }
       }`;
 
     try {
       let response = await client.query({ query: Daos(queryBody) });
+
       setDaos(response.data.daos);
     } catch (err) {
       console.log({ err });
@@ -87,9 +89,11 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-3 mx-10 flex items-center text-center">
                   <div className="flex flex-col mx-16 font-extralight">
-                    <span>{dao.gov.quorum}</span>
+                    <span>{dao.token.holders}</span>
                   </div>
-
+                  <div className="flex flex-col mx-16 font-extralight">
+                    <span>{dao.gov.proposals}</span>
+                  </div>
                   <div className="flex flex-col mx-16 font-extralight">
                     <span>
                       {ethers.utils.formatUnits(
@@ -97,10 +101,6 @@ export default function Home() {
                         "18"
                       )}
                     </span>
-                  </div>
-
-                  <div className="flex flex-col mx-16 font-extralight">
-                    <span>{dao.gov.proposals}</span>
                   </div>
                 </div>
                 <div className="flex">

@@ -30,10 +30,6 @@ export default function OpenAAVEPosition({
   ]);
   const [token2, setToken2] = useState();
   const [selectedFee, setSelectedFee] = useState<number>(10000);
-  const [lowerTick, setLowerTick] = useState<number>();
-  const [upperTick, setUpperTick] = useState<number>();
-  const [minToken1Amount, setMinToken1Amount] = useState<number>();
-  const [minToken2Amount, setMinToken2Amount] = useState<number>();
   const [token1Amount, setToken1Amount] = useState<number>();
   const [token2Amount, setToken2Amount] = useState<number>();
   const [callDatas, setCallDatas] = useState<string[]>();
@@ -59,14 +55,6 @@ export default function OpenAAVEPosition({
     setSelectedFee(fee);
   };
 
-  const handleLowerTickChange = (val: string) => {
-    setLowerTick(Number(val));
-  };
-
-  const handleUpperTickChange = (val: string) => {
-    setUpperTick(Number(val));
-  };
-
   const handleToken1AmountChange = (val: string) => {
     setToken1Amount(Number(val));
   };
@@ -75,24 +63,10 @@ export default function OpenAAVEPosition({
     setToken2Amount(Number(val));
   };
 
-  const handleMinToken1AmountChange = (val: string) => {
-    setMinToken1Amount(Number(val));
-  };
-
-  const handleMinToken2AmountChange = (val: string) => {
-    setMinToken2Amount(Number(val));
-  };
-
   const onGeretarePayloadClick = async () => {
     if (
       token1 !== undefined &&
       token2 !== undefined &&
-      minToken1Amount !== undefined &&
-      minToken2Amount !== undefined &&
-      minToken1Amount > 0 &&
-      minToken2Amount > 0 &&
-      lowerTick !== undefined &&
-      upperTick !== undefined &&
       selectedFee !== undefined &&
       token1Amount !== undefined &&
       token2Amount !== undefined &&
@@ -112,9 +86,7 @@ export default function OpenAAVEPosition({
         minToken2Amount,
         token1Address,
         token2Address,
-        lowerTick,
         token1Amount,
-        upperTick,
         token2Amount,
         compareTokens
       ).then(() => setPayload(true));
@@ -366,11 +338,7 @@ export default function OpenAAVEPosition({
         <div className="mb-12">
           {token1 !== undefined &&
           token2 !== undefined &&
-          minToken1Amount !== undefined &&
-          minToken2Amount !== undefined &&
-          lowerTick !== undefined &&
           token1Amount !== undefined &&
-          upperTick !== undefined &&
           selectedFee !== undefined &&
           token2Amount !== undefined &&
           governorAddress !== undefined ? (
@@ -394,7 +362,7 @@ export default function OpenAAVEPosition({
             )
           ) : (
             <div className="mt-4 flex justify-center ">
-              <div className="border-2 border-grey-500 px-4 py-2 rounded-full  h-12 bg-black text-white opacity-25">
+              <div className="border-2 border-black px-4 py-2 rounded-full h-12 text-black opacity-25">
                 Create governace proposal
               </div>
             </div>

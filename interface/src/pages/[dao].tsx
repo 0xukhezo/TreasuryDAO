@@ -241,7 +241,9 @@ export default function Dao() {
                 />
               )
             : timelockAddress &&
-              governorAddress && (
+              governorAddress &&
+              (displayType === "uniswapPositions" ||
+                displayType === "uniswapPositionsOpen") && (
                 <UniswapPanel
                   display={displayType}
                   timelockAddress={timelockAddress}
@@ -249,18 +251,18 @@ export default function Dao() {
                   getDisplay={getDisplay}
                 />
               )}
-          {displayType === "aavePositionsOpen" &&
-            timelockAddress &&
-            governorAddress && (
-              <AAVEPanel
-                display={displayType}
-                timelockAddress={timelockAddress}
-                governorAddress={governorAddress}
-                getDisplay={getDisplay}
-              />
-            )}
         </div>
       )}
+      {displayType === "aavePositionsOpen" &&
+        timelockAddress &&
+        governorAddress && (
+          <AAVEPanel
+            display={displayType}
+            timelockAddress={timelockAddress}
+            governorAddress={governorAddress}
+            getDisplay={getDisplay}
+          />
+        )}
     </div>
   );
 }

@@ -47,8 +47,9 @@ export default function AAVEPositionCard({
 
   return (
     <>
-      {positionAAVE &&
-        ethers.utils.formatUnits(positionAAVE[0].toString(), "18") ===
+      {positionAAVE !== undefined &&
+        data &&
+        ethers.utils.formatUnits(positionAAVE[0].toString(), "18") !==
           "0.0" && (
           <div className="flex flex-row grid grid-cols-6 items-center text-center rounded-lg bg-beige px-4 py-4 mt-4 mx-14">
             {debtToken.symbol !== "USDC" ? (

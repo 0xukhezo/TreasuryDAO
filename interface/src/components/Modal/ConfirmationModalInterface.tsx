@@ -8,11 +8,19 @@ import Image from "next/image";
 interface ConfirmationModalInterface {
   governorAddress: `0x${string}`;
   display: string;
+  callDatas: any;
+  values: any;
+  targets: any;
+  descriptionHash: any;
 }
 
 export default function ConfirmationModal({
   governorAddress,
   display,
+  callDatas,
+  values,
+  targets,
+  descriptionHash,
 }: ConfirmationModalInterface) {
   const [open, setOpen] = useState(true);
 

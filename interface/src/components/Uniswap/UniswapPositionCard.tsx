@@ -7,11 +7,13 @@ import PositionCardInfo from "./PositionCardInfo";
 interface UniswapPositionCardInterface {
   id: string;
   governorAddress: `0x${string}`;
+  timelockAddress: `0x${string}`;
 }
 
 export default function UniswapPositionCard({
   id,
   governorAddress,
+  timelockAddress,
 }: UniswapPositionCardInterface) {
   const [dataPosition, setDataPosition] = useState<any>();
   const { data, isSuccess } = useContractRead({
@@ -28,10 +30,12 @@ export default function UniswapPositionCard({
 
   return (
     <div>
-      {dataPosition && dataPosition[7].toString() !== "0" && (
+      {dataPosition && dataPosition[7].toString() !== "0" ? (
         <>
           <div className="rounded-lg bg-beige px-4 py-8 mt-4 ">
             <PositionCardInfo
+              id={id}
+              timelockAddress={timelockAddress}
               governorAddress={governorAddress}
               token0={dataPosition[2]}
               token1={dataPosition[3]}
@@ -44,6 +48,10 @@ export default function UniswapPositionCard({
             />
           </div>
         </>
+      ) : (
+        <div className="animate-pulse">
+          <div className="rounded-lg bg-brown px-4 py-10 mt-4"></div>
+        </div>
       )}
     </div>
   );

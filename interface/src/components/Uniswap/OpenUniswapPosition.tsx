@@ -262,7 +262,7 @@ export default function OpenUniswapPosition({
                   >
                     Amount
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-2 flex flex-row bg-white">
                     <input
                       value={token1Amount}
                       onChange={(e) => handleToken1AmountChange(e.target.value)}
@@ -280,7 +280,14 @@ export default function OpenUniswapPosition({
                       name="token1Amount"
                       id="token1Amount"
                       autoComplete="family-name"
-                      className="h-20 px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="h-20 px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                    />
+                    <Image
+                      width={50}
+                      height={50}
+                      alt="Chain Image"
+                      src={token1[1][0].img.src}
+                      className="p-2"
                     />
                   </div>
                 </div>
@@ -291,7 +298,7 @@ export default function OpenUniswapPosition({
                   >
                     Amount
                   </label>
-                  <div className="mt-2 ">
+                  <div className="mt-2 flex flex-row bg-white">
                     <input
                       value={token2Amount}
                       onChange={(e) => handleToken2AmountChange(e.target.value)}
@@ -309,8 +316,17 @@ export default function OpenUniswapPosition({
                       name="token2Amount"
                       id="token2Amount"
                       autoComplete="family-name"
-                      className="h-20 px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="h-20 px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
                     />
+                    {token2 && (
+                      <Image
+                        width={50}
+                        height={50}
+                        alt="Chain Image"
+                        src={token2[1][0].img.src}
+                        className="p-2"
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -324,9 +340,18 @@ export default function OpenUniswapPosition({
                       htmlFor="lowerTick"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Upper tick price
+                      Upper price per {token1[1][0].symbol}
                     </label>
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-row bg-white">
+                      {token2 && (
+                        <Image
+                          width={50}
+                          height={50}
+                          alt="Chain Image"
+                          src={token2[1][0].img.src}
+                          className="p-2"
+                        />
+                      )}
                       <input
                         value={lowerTick}
                         onChange={(e) => handleLowerTickChange(e.target.value)}
@@ -344,7 +369,7 @@ export default function OpenUniswapPosition({
                         name="lowerTick"
                         id="lowerTick"
                         autoComplete="family-name"
-                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className=" px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -353,9 +378,18 @@ export default function OpenUniswapPosition({
                       htmlFor="upperTick"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Lower tick price
+                      Lower price per {token1[1][0].symbol}
                     </label>
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-row bg-white">
+                      {token2 && (
+                        <Image
+                          width={50}
+                          height={50}
+                          alt="Chain Image"
+                          src={token2[1][0].img.src}
+                          className="p-2"
+                        />
+                      )}
                       <input
                         value={upperTick}
                         onChange={(e) => handleUpperTickChange(e.target.value)}
@@ -373,7 +407,7 @@ export default function OpenUniswapPosition({
                         name="upperTick"
                         id="upperTick"
                         autoComplete="family-name"
-                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className=" px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -382,9 +416,17 @@ export default function OpenUniswapPosition({
                       htmlFor="minToken1Amount"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Minimal amount of token1
+                      Minimal amount
                     </label>
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-row bg-white">
+                      <Image
+                        width={40}
+                        height={40}
+                        alt="Chain Image"
+                        src={token1[1][0].img.src}
+                        className="p-2"
+                      />
+
                       <input
                         value={minToken1Amount}
                         onChange={(e) =>
@@ -404,7 +446,7 @@ export default function OpenUniswapPosition({
                         name="minToken1Amount"
                         id="minToken1Amount"
                         autoComplete="family-name"
-                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className=" px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
@@ -413,9 +455,18 @@ export default function OpenUniswapPosition({
                       htmlFor="minToken2Amount"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Minimal amount of token2
+                      Minimal amount
                     </label>
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-row bg-white">
+                      {token2 && (
+                        <Image
+                          width={50}
+                          height={50}
+                          alt="Chain Image"
+                          src={token2[1][0].img.src}
+                          className="p-2"
+                        />
+                      )}
                       <input
                         value={minToken2Amount}
                         onChange={(e) =>
@@ -435,7 +486,7 @@ export default function OpenUniswapPosition({
                         name="minToken2Amount"
                         id="minToken2Amount"
                         autoComplete="family-name"
-                        className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className=" px-4 block w-full  border-0 py-1.5 text-gray-900  placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>{" "}

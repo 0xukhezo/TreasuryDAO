@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Identicon from "identicon.js";
 import { useRouter } from "next/router";
 import { useNetwork } from "wagmi";
-import PolygonChain from "../../public/PolygonChain.svg";
+import ArbitrumChain from "../../public/ArbitrumChain.svg";
 import Uniswap from "../../public/Uniswap.svg";
 import AAVE from "../../public/AAVE.svg";
 
@@ -17,7 +17,6 @@ import Link from "next/link";
 
 export default function Dao() {
   const router = useRouter();
-  const { chain } = useNetwork();
 
   const [timelockAddress, setTimelockAddress] = useState<`0x${string}`>();
   const [governorAddress, setGovernorAddress] = useState<`0x${string}`>();
@@ -25,50 +24,32 @@ export default function Dao() {
   const [dao, setDao] = useState<any>();
 
   async function fetchDao(daoName: string) {
-    // const queryBody = `query {
-    //     daos(where: {gov_: {name: "${daoName}"}}) {
-    //       id
-    //       gov {
-    //         name
-    //         id
-    //         proposals
-    //         quorum
-    //         proposalThreshold
-    //         proposalsQueued
-    //       }
-    //       timelock {
-    //         id
-    //       }
-    //       token {
-    //         id
-    //       }
-    //     }
-    //   }`;
+    const queryBody = `query {
+        daos(where: {gov_: {name: "${daoName}"}}) {
+          id
+          gov {
+            name
+            id
+            proposals
+            quorum
+            proposalThreshold
+            proposalsQueued
+          }
+          timelock {
+            id
+          }
+          token {
+            id
+          }
+        }
+      }`;
 
     try {
-      // let response = await client.query({ query: Daos(queryBody) });
-      const daotest = [
-        {
-          gov: {
-            id: "0x936139366c5db48543368ee9cd075267d176a02c",
-            name: "London DAO",
-            proposals: "0",
-            quorum: "51",
-            proposalThreshold: "1000000000000000000",
-            proposalsQueued: "0",
-          },
-          timelock: { id: "0x00b60986b613b953d6da14ea6ead2f93861b61bd" },
-          token: {
-            id: "0xc1c31b236d0dbff0760b7a9cbb935619f752f591",
-          },
-        },
-      ];
-      setTimelockAddress(daotest[0].timelock.id as `0x${string}`);
-      setGovernorAddress(daotest[0].gov.id as `0x${string}`);
-      setDao(daotest[0]);
+      let response = await client.query({ query: Daos(queryBody) });
 
-      // setTimelockAddress(response.data.daos[0].timelock.id);
-      // setGovernorAddress(response.data.daos[0].gov.id);
+      setTimelockAddress(response.data.daos[0].timelock.id);
+      setGovernorAddress(response.data.daos[0].gov.id);
+      setDao(response.data.daos[0]);
     } catch (err) {
       console.log({ err });
     }
@@ -85,7 +66,7 @@ export default function Dao() {
   const getDisplay = (type: string) => {
     setDisplayType(type);
   };
-  console.log(displayType);
+
   return (
     <div className="flex mt-6 flex-col">
       {dao && (
@@ -204,13 +185,13 @@ export default function Dao() {
                 width={20}
                 height={20}
                 alt="Chain Image"
-                src={PolygonChain}
+                src={ArbitrumChain}
               />
-              <span className="ml-4 font-semibold">Polygon</span>{" "}
+              <span className="ml-4 font-semibold">Arbitrum</span>{" "}
             </div>
           </div>
           <div className="mt-4 font-light ml-14">
-            This is a Rari DAO that fully controls Rari Foundation and it's
+            This is a {dao.gov.name} that fully controls {dao.gov.name} and it's
             on-chain treasury.
           </div>
         </div>

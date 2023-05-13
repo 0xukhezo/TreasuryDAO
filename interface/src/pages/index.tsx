@@ -3,7 +3,7 @@ import Identicon from "identicon.js";
 import Link from "next/link";
 import Image from "next/image";
 
-import PolygonChain from "../../public/PolygonChain.svg";
+import ArbitrumChain from "../../public/ArbitrumChain.svg";
 
 import { client, Daos } from "./api/Daos";
 import ChainButtons from "@/components/Buttons/ChainButtons";
@@ -11,37 +11,6 @@ import { ethers } from "ethers";
 
 export default function Home() {
   const [daos, setDaos] = useState<Object[]>();
-
-  const daotest = [
-    {
-      gov: {
-        id: "0x936139366c5db48543368ee9cd075267d176a02c",
-        name: "London DAO",
-        proposals: "0",
-        quorum: "51",
-        proposalThreshold: "1000000000000000000",
-        proposalsQueued: "0",
-      },
-      timelock: { id: "0x00b60986b613b953d6da14ea6ead2f93861b61bd" },
-      token: {
-        id: "0xc1c31b236d0dbff0760b7a9cbb935619f752f591",
-      },
-    },
-    {
-      gov: {
-        id: "0x936139366c5db48543368ee9cd075267d176a02c",
-        name: "APE DAO",
-        proposals: "0",
-        quorum: "34",
-        proposalThreshold: "1000000000000000000",
-        proposalsQueued: "0",
-      },
-      timelock: { id: "0x00b60986b613b953d6as14ea6ead2f93861b61bd" },
-      token: {
-        id: "0xc1c31b236d0dbff0760b7a9cbb935619f752f591",
-      },
-    },
-  ];
 
   async function fetchDaos() {
     const queryBody = `query {
@@ -54,7 +23,6 @@ export default function Home() {
             quorum
             proposalThreshold
             proposalsQueued
-            holders
           }
           timelock {
             id
@@ -67,7 +35,6 @@ export default function Home() {
 
     try {
       let response = await client.query({ query: Daos(queryBody) });
-
       setDaos(response.data.daos);
     } catch (err) {
       console.log({ err });
@@ -97,8 +64,8 @@ export default function Home() {
           </div>
           <div></div>
         </div>
-        {daotest !== undefined &&
-          daotest.map((dao: any, index: number) => {
+        {daos !== undefined &&
+          daos.map((dao: any, index: number) => {
             return (
               <Link
                 href={`/${dao.gov.name}`}
@@ -141,7 +108,7 @@ export default function Home() {
                     width={20}
                     height={20}
                     alt="Chain Image"
-                    src={PolygonChain}
+                    src={ArbitrumChain}
                   />
                   <span className="ml-4 font-semibold "> {dao.gov.name}</span>
                 </div>

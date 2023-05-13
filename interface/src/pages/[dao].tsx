@@ -149,6 +149,30 @@ export default function Dao() {
               <span className="font-semibold mt-1 mx-2">AAVE Positions</span>
             </div>
           )}
+          {displayType === "aavePositionsOpen" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={15} height={15} alt="Chain Image" src={AAVE} />
+              <button
+                onClick={() => setDisplayType("aavePositions")}
+                className="mx-2"
+              >
+                AAVE Positions
+              </button>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <span className="font-semibold mx-2">Open position</span>
+            </div>
+          )}
           {displayType === "daoInfo" && (
             <div className="flex items-center text-center ml-14">
               <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
@@ -232,6 +256,7 @@ export default function Dao() {
                   display={displayType}
                   timelockAddress={timelockAddress}
                   governorAddress={governorAddress}
+                  getDisplay={getDisplay}
                 />
               )
             : timelockAddress &&

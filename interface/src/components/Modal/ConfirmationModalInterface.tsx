@@ -2,9 +2,18 @@ import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import CreatePositionButton from "../Buttons/CreatePositionButton";
 import Uniswap from "../../../public/Uniswap.svg";
+import AAVE from "../../../public/AAVE.svg";
 import Image from "next/image";
 
-export default function UniswapConfirmationModal() {
+interface ConfirmationModalInterface {
+  governorAddress: `0x${string}`;
+  display: string;
+}
+
+export default function ConfirmationModal({
+  governorAddress,
+  display,
+}: ConfirmationModalInterface) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -40,7 +49,7 @@ export default function UniswapConfirmationModal() {
                       width={100}
                       height={100}
                       alt="Chain Image"
-                      src={Uniswap}
+                      src={display === "uniswap" ? Uniswap : AAVE}
                       className="p-2"
                     />
                   </div>
@@ -49,12 +58,20 @@ export default function UniswapConfirmationModal() {
                       as="h3"
                       className="text-center font-semibold leading-6 text-gray-900 w-3/4 mx-auto"
                     >
-                      Create a governance proposal to close this LP position
+                      {display === "uniswap"
+                        ? "Create a governance proposal to close this LP position"
+                        : "Create a governance proposal to close this position"}
                     </Dialog.Title>
                   </div>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <CreatePositionButton />
+                  <CreatePositionButton
+                    callDatas={callDatas}
+                    values={values}
+                    targets={targets}
+                    descriptionHash={descriptionHash}
+                    governorAddress={governorAddress}
+                  />
                   <div className="mt-2 sm:mt-3">
                     <button
                       type="button"

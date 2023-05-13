@@ -5,12 +5,11 @@ import abi from "../../../abi/abis.json";
 import PoolData from "./PoolData";
 import Image from "next/image";
 
-import ethLogo from "../../../public/usdc.svg";
-import btcLogo from "../../../public/btc.svg";
 import { coinDataArbitrum } from "../../../utils/tokens";
-import UniswapConfirmationModal from "../Modal/UniswapConfirmationModal";
+import ConfirmationModalInterface from "../Modal/ConfirmationModalInterface";
 
 interface PositionCardInfoInterface {
+  governorAddress: `0x${string}`;
   token0: `0x${string}`;
   token1: `0x${string}`;
   fee: number;
@@ -22,6 +21,7 @@ interface PositionCardInfoInterface {
 }
 
 function PositionCardInfo({
+  governorAddress,
   token0,
   token1,
   fee,
@@ -134,7 +134,12 @@ function PositionCardInfo({
           >
             Close Position
           </button>
-          {modalView && <UniswapConfirmationModal />}
+          {modalView && (
+            <ConfirmationModalInterface
+              governorAddress={governorAddress}
+              display="uniswap"
+            />
+          )}
         </>
       )}
     </div>

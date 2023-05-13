@@ -87,7 +87,10 @@ export default function UniswapPanel({
             {uniswapPositionsID?.map((id: string, index: number) => {
               return (
                 <div key={index}>
-                  <UniswapPositionCard id={id} />
+                  <UniswapPositionCard
+                    id={id}
+                    governorAddress={governorAddress}
+                  />
                 </div>
               );
             })}

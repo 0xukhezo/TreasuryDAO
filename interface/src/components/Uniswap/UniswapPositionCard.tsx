@@ -6,10 +6,12 @@ import PositionCardInfo from "./PositionCardInfo";
 
 interface UniswapPositionCardInterface {
   id: string;
+  governorAddress: `0x${string}`;
 }
 
 export default function UniswapPositionCard({
   id,
+  governorAddress,
 }: UniswapPositionCardInterface) {
   const [dataPosition, setDataPosition] = useState<any>();
   const { data, isSuccess } = useContractRead({
@@ -30,6 +32,7 @@ export default function UniswapPositionCard({
         <>
           <div className="rounded-lg bg-beige px-4 py-8 mt-4 ">
             <PositionCardInfo
+              governorAddress={governorAddress}
               token0={dataPosition[2]}
               token1={dataPosition[3]}
               fee={dataPosition[4]}

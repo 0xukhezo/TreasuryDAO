@@ -23,7 +23,7 @@ export default function AAVEDisplayAPY({
   });
 
   useEffect(() => {
-    const apyData = data as Object;
+    const apyData = data as any;
     setApy(apyData);
   }, [isSuccess]);
 
@@ -36,7 +36,6 @@ export default function AAVEDisplayAPY({
           ).toFixed(2)}{" "}
         %
       </div>
-      <div>{coins[tokenAddress][0].symbol}</div>
     </div>
   );
 }

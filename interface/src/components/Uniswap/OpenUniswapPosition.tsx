@@ -319,7 +319,7 @@ export default function OpenUniswapPosition({
               <div className="bg-beige p-8 rounded-lg">
                 <h1 className="font-semibold text-xl mb-2">Threshold</h1>
                 <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-4 row-span-2 ">
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 mt-4">
                     <label
                       htmlFor="lowerTick"
                       className="block text-sm font-medium leading-6 text-gray-900"
@@ -348,7 +348,7 @@ export default function OpenUniswapPosition({
                       />
                     </div>
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 mt-4">
                     <label
                       htmlFor="upperTick"
                       className="block text-sm font-medium leading-6 text-gray-900"
@@ -377,7 +377,7 @@ export default function OpenUniswapPosition({
                       />
                     </div>
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 mt-4">
                     <label
                       htmlFor="minToken1Amount"
                       className="block text-sm font-medium leading-6 text-gray-900"
@@ -408,7 +408,7 @@ export default function OpenUniswapPosition({
                       />
                     </div>
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="sm:col-span-2 mt-4">
                     <label
                       htmlFor="minToken2Amount"
                       className="block text-sm font-medium leading-6 text-gray-900"

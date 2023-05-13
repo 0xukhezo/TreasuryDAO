@@ -9,10 +9,12 @@ import UniswapPositionCard from "./UniswapPositionCard";
 
 interface UniswapPositionsInterface {
   timelockAddress: `0x${string}`;
+  governorAddress: `0x${string}`;
 }
 
 export default function UniswapPositions({
   timelockAddress,
+  governorAddress,
 }: UniswapPositionsInterface) {
   const provider = useProvider();
   const [uniswapPositionsID, setUniswapPositionsID] = useState<string[]>();
@@ -70,7 +72,7 @@ export default function UniswapPositions({
         {uniswapPositionsID?.map((id: string, index: number) => {
           return (
             <div key={index}>
-              <UniswapPositionCard id={id} />
+              <UniswapPositionCard id={id} governorAddress={governorAddress} />
             </div>
           );
         })}

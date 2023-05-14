@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import abi from "../../../abi/abis.json";
 import { useContractRead } from "wagmi";
-import { TickMath, Position } from "@uniswap/v3-sdk";
-import { ethers } from "ethers";
 
 interface PoolDataInterfece {
   dataPool: any;
@@ -17,6 +15,7 @@ export default function PoolData({
   feeToken0,
   feeToken1,
 }: PoolDataInterfece) {
+  const [dataFormat, setDataFormat] = useState<any>();
   const { data, isSuccess } = useContractRead({
     address: dataPool,
     abi: abi.abiPool,
@@ -32,12 +31,17 @@ export default function PoolData({
     functionName: "feeGrowthGlobal0X128",
   });
 
+  useEffect(() => {
+    const dataFormat = data as any;
+    setDataFormat(dataFormat);
+  }, [isSuccess]);
+
   return (
     <div>
-      {data !== undefined && data !== null && (
+      {dataFormat !== undefined && dataFormat !== null && (
         <div className="mx-10">
           {(
-            (liquidity / Number(data.sqrtPriceX96.toString())) *
+            (liquidity / Number(dataFormat.sqrtPriceX96.toString())) *
             10 ** 13
           ).toFixed(2)}
           $

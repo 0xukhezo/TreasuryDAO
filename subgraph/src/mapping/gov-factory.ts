@@ -23,6 +23,7 @@ export function handleDAOCreated(event: DAOCreatedEvent): void {
   dao.transactionHash = event.transaction.hash
   dao.gov = event.params.gov.toHexString()
   dao.token = event.params.token.toHexString()
+  dao.helper = event.params.helper.toHexString()
   dao.timelock = event.params.timelock.toHexString()
 
   // Create gov
@@ -47,6 +48,7 @@ export function handleDAOCreated(event: DAOCreatedEvent): void {
 
   //Token holder
   let tokenHolder = new TokenHolder(event.params.sender.toHexString())
+  tokenHolder.tokenBalance = ZERO_BI
   tokenHolder.save()
 
   // Create timelock

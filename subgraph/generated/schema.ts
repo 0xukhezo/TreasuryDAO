@@ -129,6 +129,19 @@ export class Dao extends Entity {
     this.set("timelock", Value.fromString(value));
   }
 
+  get helper(): string {
+    let value = this.get("helper");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set helper(value: string) {
+    this.set("helper", Value.fromString(value));
+  }
+
   get token(): string {
     let value = this.get("token");
     if (!value || value.kind == ValueKind.NULL) {

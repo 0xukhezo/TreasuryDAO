@@ -3,10 +3,6 @@ import { Approval as ApprovalEvent, Transfer, DelegateChanged } from "../../gene
 import { log } from '@graphprotocol/graph-ts'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BI } from "../utils/constants"
 
-export function handleApproval(event: ApprovalEvent): void {
-
-
-}
 
 export function handleTransfer(event: Transfer): void {
 

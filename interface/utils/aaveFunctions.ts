@@ -44,19 +44,13 @@ export async function createProposeCloseNaturalPosition(tokenIn:ERC20, helper: G
     let targets = []
     let values = []
 
-    console.log(helper.address, borrowAmount)
-
     callDatas.push(tokenIn.interface.encodeFunctionData('approve', [helper.address, borrowAmount]))
     targets.push(tokenIn.address)
     values.push('0')
 
-    console.log(tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode)
-
     callDatas.push(helper.interface.encodeFunctionData('swapRepay', [tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode]))
     targets.push(helper.address)
     values.push('0')
-
-    console.log(tokenIn.address,balanceAUsdc,timelockAddr)
 
     callDatas.push(pool.interface.encodeFunctionData('withdraw',[tokenIn.address,balanceAUsdc,timelockAddr]))
     targets.push(pool.address)

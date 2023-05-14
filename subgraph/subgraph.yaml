@@ -47,10 +47,10 @@ templates:
         - name: Token
           file: ./abis/GovToken.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-        - event: DelegateChanged(indexed address,indexed address,indexed address)
-          handler: handleDelegateChanged
+        #- event: Approval(indexed address,indexed address,uint256)
+        #  handler: handleApproval
+        #- event: DelegateChanged(indexed address,indexed address,indexed address)
+        #  handler: handleDelegateChanged
         #- event: DelegateVotesChanged(indexed address,uint256,uint256)
         #  handler: handleDelegateVotesChanged
         #- event: OwnershipTransferred(indexed address,indexed address)

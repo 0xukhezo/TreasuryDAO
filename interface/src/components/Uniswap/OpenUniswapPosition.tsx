@@ -228,6 +228,9 @@ export default function OpenUniswapPosition({
     }
   }, [token1]);
 
+  const img1 = token1[1][0] as any;
+  const img2 = token2 !== undefined && (token2[1][0] as any);
+
   return (
     <div>
       <div className="mx-10 flex items-center flex-col">
@@ -288,7 +291,7 @@ export default function OpenUniswapPosition({
                     width={50}
                     height={50}
                     alt="Chain Image"
-                    src={token1[1][0].img.src}
+                    src={img1.img.src}
                     className="p-2"
                   />
                 </div>
@@ -325,7 +328,7 @@ export default function OpenUniswapPosition({
                       width={50}
                       height={50}
                       alt="Chain Image"
-                      src={token2[1][0].img.src}
+                      src={img2.img.src}
                       className="p-2"
                     />
                   )}
@@ -342,7 +345,7 @@ export default function OpenUniswapPosition({
                     htmlFor="lowerTick"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
-                    Upper price per {token1[1][0].symbol}
+                    Upper price per {img1.symbol}
                   </label>
                   <div className="mt-2 flex flex-row bg-white rounded-lg border-2 border-white">
                     {token2 && (
@@ -350,7 +353,7 @@ export default function OpenUniswapPosition({
                         width={50}
                         height={50}
                         alt="Chain Image"
-                        src={token2[1][0].img.src}
+                        src={img2.img.src}
                         className="p-2"
                       />
                     )}
@@ -380,7 +383,7 @@ export default function OpenUniswapPosition({
                     htmlFor="upperTick"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
-                    Lower price per {token1[1][0].symbol}
+                    Lower price per {img1.symbol}
                   </label>
                   <div className="mt-2 flex flex-row bg-white rounded-lg border-2 border-white">
                     {token2 && (
@@ -388,7 +391,7 @@ export default function OpenUniswapPosition({
                         width={50}
                         height={50}
                         alt="Chain Image"
-                        src={token2[1][0].img.src}
+                        src={img2.img.src}
                         className="p-2"
                       />
                     )}
@@ -423,10 +426,10 @@ export default function OpenUniswapPosition({
                   <div className="mt-2 flex flex-row bg-white rounded-lg border-2 border-white">
                     {token2 && (
                       <Image
-                        width={token2[1][0].symbol !== "USDC" ? 50 : 40}
-                        height={token2[1][0].symbol !== "USDC" ? 50 : 40}
+                        width={img2.symbol !== "USDC" ? 50 : 40}
+                        height={img2.symbol !== "USDC" ? 50 : 40}
                         alt="Chain Image"
-                        src={token1[1][0].img.src}
+                        src={img1.img.src}
                         className="p-2"
                       />
                     )}
@@ -467,7 +470,7 @@ export default function OpenUniswapPosition({
                         width={50}
                         height={50}
                         alt="Chain Image"
-                        src={token2[1][0].img.src}
+                        src={img2.img.src}
                         className="p-2"
                       />
                     )}

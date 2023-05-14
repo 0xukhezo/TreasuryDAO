@@ -1,72 +1,57 @@
 import React, { useState, useEffect } from "react";
+import Identicon from "identicon.js";
 import { useRouter } from "next/router";
 import { useNetwork } from "wagmi";
+import ArbitrumChain from "../../public/ArbitrumChain.svg";
+import Uniswap from "../../public/Uniswap.svg";
+import AAVE from "../../public/AAVE.svg";
 
-import { BarsArrowDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 import { client, Daos } from "./api/Daos";
 import UniswapPanel from "@/components/Uniswap/UniswapPanel";
-import DaoInfoPanel from "@/components/Dao/DaoInfoPanel";
-import GMXLateralBarButtons from "@/components/Buttons/GMXLateralBarButtons";
-import UniswapLateralBarButtons from "@/components/Buttons/UniswapLateralBarButtons";
-import AAVELateralBarbuttons from "@/components/Buttons/AAVELateralBarbuttons";
+
 import AAVEPanel from "@/components/AAVE/AAVEPanel";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Dao() {
   const router = useRouter();
-  const { chain } = useNetwork();
-
   const [timelockAddress, setTimelockAddress] = useState<`0x${string}`>();
   const [governorAddress, setGovernorAddress] = useState<`0x${string}`>();
+  const [helperAddress, setHelperAddress] = useState<`0x${string}`>();
   const [displayType, setDisplayType] = useState<string>("daoInfo");
-  const [lateralOpen, setLateralOpen] = useState<boolean>(true);
   const [dao, setDao] = useState<any>();
 
   async function fetchDao(daoName: string) {
-    // const queryBody = `query {
-    //     daos(where: {gov_: {name: "${daoName}"}}) {
-    //       id
-    //       gov {
-    //         name
-    //         id
-    //         proposals
-    //         quorum
-    //         proposalThreshold
-    //         proposalsQueued
-    //       }
-    //       timelock {
-    //         id
-    //       }
-    //       token {
-    //         id
-    //       }
-    //     }
-    //   }`;
+    const queryBody = `query {
+        daos(where: {gov_: {id: "${daoName}"}}) {
+          id
+          helper
+          gov {
+            name
+            id
+            proposals
+            quorum
+            proposalThreshold
+            proposalsQueued
+          }
+          timelock {
+            id
+          }
+          token {
+            id
+          }
+        }
+      }`;
 
     try {
-      // let response = await client.query({ query: Daos(queryBody) });
-      const daotest = [
-        {
-          gov: {
-            id: "0x936139366c5db48543368ee9cd075267d176a02c",
-            name: "London DAO",
-            proposals: "0",
-            quorum: "51",
-            proposalThreshold: "1000000000000000000",
-            proposalsQueued: "0",
-          },
-          timelock: { id: "0x00b60986b613b953d6da14ea6ead2f93861b61bd" },
-          token: {
-            id: "0xc1c31b236d0dbff0760b7a9cbb935619f752f591",
-          },
-        },
-      ];
-      setTimelockAddress(daotest[0].timelock.id as `0x${string}`);
-      setGovernorAddress(daotest[0].gov.id as `0x${string}`);
-      setDao(daotest[0]);
+      let response = await client.query({ query: Daos(queryBody) });
 
-      // setTimelockAddress(response.data.daos[0].timelock.id);
-      // setGovernorAddress(response.data.daos[0].gov.id);
+      setTimelockAddress(response.data.daos[0].timelock.id);
+      setGovernorAddress(response.data.daos[0].gov.id);
+      setHelperAddress(response.data.daos[0].helper);
+      setDao(response.data.daos[0]);
     } catch (err) {
       console.log({ err });
     }
@@ -80,64 +65,215 @@ export default function Dao() {
     setDisplayType(type);
   };
 
+  const getDisplay = (type: string) => {
+    setDisplayType(type);
+  };
+
   return (
-    <div className="flex ">
-      {lateralOpen && (
-        <div className="w-1/5 flex flex-col border-r-2 border-r-black h-screen bg-gray-500">
-          <button
-            onClick={() => setLateralOpen(false)}
-            className="my-4 flex flex-row justify-end mr-6"
-          >
-            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-          </button>
-          <div className="flex flex-col items-center">
-            <button
-              onClick={() => setDisplay("daoInfo")}
-              className="w-1/2 py-2 border-2 border-black rounded-xl items-center"
-            >
-              DAO info
-            </button>
+    <div className="flex mt-6 flex-col">
+      {dao && (
+        <div className="flex flex-col w-screen">
+          {displayType === "uniswapPositions" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={"/"} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={20} height={20} alt="Chain Image" src={Uniswap} />
+
+              <span className="font-semibold mt-1 mx-2">Uniswap Positions</span>
+            </div>
+          )}
+          {displayType === "uniswapPositionsOpen" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={20} height={20} alt="Chain Image" src={Uniswap} />
+              <button
+                onClick={() => setDisplayType("uniswapPositions")}
+                className="mx-2"
+              >
+                Uniswap Positions
+              </button>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <span className="font-semibold mx-2">Open LP position</span>
+            </div>
+          )}
+          {displayType === "aavePositions" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={15} height={15} alt="Chain Image" src={AAVE} />
+              <span className="font-semibold mt-1 mx-2">AAVE Positions</span>
+            </div>
+          )}
+          {displayType === "aavePositionsOpen" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Link
+                href={`/${dao.gov.name}`}
+                onClick={() => setDisplay("daoInfo")}
+              >
+                {dao.gov.name}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <Image width={15} height={15} alt="Chain Image" src={AAVE} />
+              <button
+                onClick={() => setDisplayType("aavePositions")}
+                className="mx-2"
+              >
+                AAVE Positions
+              </button>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <span className="font-semibold mx-2">Open position</span>
+            </div>
+          )}
+          {displayType === "daoInfo" && (
+            <div className="flex items-center text-center ml-14">
+              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+                Home{" "}
+              </Link>
+              <ChevronRightIcon className="h-4 w-4 mx-1" />
+              <span className="font-semibold ">{dao.gov.name}</span>
+            </div>
+          )}
+
+          <div className="flex items-center mt-8 justify-between mr-14">
+            <div className="flex items-center ml-14">
+              <Image
+                width={50}
+                height={50}
+                alt="Logo Image"
+                src={`data:image/png;base64,${new Identicon(
+                  dao.timelock.id,
+                  64
+                ).toString()}`}
+                className="rounded-full "
+              />
+              <h1 className="font-semibold ml-6 text-2xl ml-14">
+                {dao.gov.name}
+              </h1>
+            </div>
+            <div className="flex items-center">
+              <Image
+                width={20}
+                height={20}
+                alt="Chain Image"
+                src={ArbitrumChain}
+              />
+              <span className="ml-4 font-semibold">Arbitrum</span>{" "}
+            </div>
           </div>
-          <div className="flex flex-col items-center">
-            <AAVELateralBarbuttons setDisplay={setDisplay} />
-            <UniswapLateralBarButtons setDisplay={setDisplay} />
+          <div className="mt-4 font-light ml-14">
+            This is a {dao.gov.name} that fully controls {dao.gov.name} and it
+            is on-chain treasury.
           </div>
         </div>
       )}
-      <div className={lateralOpen ? "w-4/5 " : "w-full"}>
-        {!lateralOpen && (
-          <button onClick={() => setLateralOpen(true)}>
-            <BarsArrowDownIcon
-              className="h-10 w-10 -rotate-90"
-              aria-hidden="true"
-            />
-          </button>
-        )}
-        {displayType === "daoInfo" ? (
-          <DaoInfoPanel dao={dao} />
-        ) : timelockAddress &&
-          governorAddress &&
-          (displayType === "aavePositions" ||
-            displayType === "aaveOpenPosition") ? (
-          timelockAddress &&
-          governorAddress && (
-            <AAVEPanel
-              display={displayType}
-              timelockAddress={timelockAddress}
-              governorAddress={governorAddress}
-            />
+      {displayType === "daoInfo"
+        ? dao && (
+            <div className="flex items-center flex-col justify-center mt-10 h-96 bg-beige mx-14 rounded-lg font-bold text-xl">
+              <h1 className="mb-4">View positions in</h1>
+              <div className="flex text-center">
+                <button
+                  className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
+                  onClick={() => setDisplay("uniswapPositions")}
+                >
+                  <Image
+                    width={100}
+                    height={100}
+                    alt="Chain Image"
+                    src={Uniswap}
+                    className="p-2"
+                  />{" "}
+                  <span className="mt-2">Uniswap</span>
+                </button>
+                <button
+                  className="px-4 py-2 bg-beigeLight mx-2 rounded-lg w-36 flex items-center flex-col"
+                  onClick={() => setDisplay("aavePositions")}
+                >
+                  <Image
+                    width={80}
+                    height={80}
+                    alt="Chain Image"
+                    src={AAVE}
+                    className="p-2"
+                  />
+                  <span className="mt-2">AAVE</span>
+                </button>
+              </div>
+            </div>
           )
-        ) : (
-          timelockAddress &&
-          governorAddress && (
-            <UniswapPanel
-              display={displayType}
-              timelockAddress={timelockAddress}
-              governorAddress={governorAddress}
-            />
-          )
+        : dao && (
+            <div className={"w-full"}>
+              {timelockAddress &&
+              governorAddress &&
+              displayType === "aavePositions"
+                ? timelockAddress &&
+                  helperAddress &&
+                  governorAddress && (
+                    <AAVEPanel
+                      display={displayType}
+                      timelockAddress={timelockAddress}
+                      governorAddress={governorAddress}
+                      helperAddress={helperAddress}
+                      getDisplay={getDisplay}
+                    />
+                  )
+                : timelockAddress &&
+                  governorAddress &&
+                  (displayType === "uniswapPositions" ||
+                    displayType === "uniswapPositionsOpen") && (
+                    <UniswapPanel
+                      display={displayType}
+                      timelockAddress={timelockAddress}
+                      governorAddress={governorAddress}
+                      getDisplay={getDisplay}
+                    />
+                  )}
+            </div>
+          )}
+      {displayType === "aavePositionsOpen" &&
+        timelockAddress &&
+        governorAddress &&
+        helperAddress &&
+        dao && (
+          <AAVEPanel
+            display={displayType}
+            timelockAddress={timelockAddress}
+            helperAddress={helperAddress}
+            governorAddress={governorAddress}
+            getDisplay={getDisplay}
+          />
         )}
-      </div>
     </div>
   );
 }

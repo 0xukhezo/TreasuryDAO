@@ -1,8 +1,7 @@
-import btcLogo from '../public/ic_bitcoin.svg';
-import ethLogo from '../public/ic_ethereum.svg';
+import btcLogo from '../public/btc.svg';
+import ethLogo from '../public/eth.svg';
 import linkLogo from '../public/ic_link.svg';
-import uniLogo from '../public/ic_unis.svg';
-import usdcLogo from '../public/ic_usdc.svg';
+import usdcLogo from '../public/usdc.svg';
 
 export const coinDataArbitrum: {
     [key: string]: { img: string; symbol: string; }[];
@@ -31,3 +30,14 @@ export const coinDataArbitrum: {
     "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39": [{ "img": linkLogo, "symbol": "LINK" }],
     "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": [{ "img": usdcLogo, "symbol": "USDC" }],
   };
+
+  export const debtAAVEPolygon = []
+
+  export const debtAAVEArbitrum = [
+    {token:"0x92b42c66840C7AD907b4BF74879FF3eF7c529473", symbol:"WBTC", img:btcLogo},
+    {token:"0x0c84331e39d6658Cd6e6b9ba04736cC4c4734351", symbol:"WETH", img:ethLogo},
+    {token:"0x953A573793604aF8d41F306FEb8274190dB4aE0e", symbol:"LINK", img:linkLogo},
+    {token:"0xFCCf3cAbbe80101232d343252614b6A3eE81C989", symbol:"USDC", img:usdcLogo}
+  ]
+
+  export const debtAAVEOptimism  = [];

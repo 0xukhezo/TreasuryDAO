@@ -16,8 +16,8 @@ function FeeSelector({
       onClick={() => getFeeSelected(fee)}
       className={
         fee === selectedFee
-          ? "border-2 border-red-300 px-4 py-2 rounded-lg mr-4"
-          : "border-2 border-gray-200 px-4 py-2 rounded-lg mr-4"
+          ? "border-2 border-black px-4 py-2 rounded-lg mr-4"
+          : "border-2 border-black px-4 py-2 rounded-lg mr-4 opacity-20"
       }
     >
       {fee / 10000}

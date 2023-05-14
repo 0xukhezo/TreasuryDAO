@@ -28,7 +28,7 @@ export default function TokenSelector({
   }
 
   return (
-    <div className="flex items-center border-2 border-gray-500 rounded-2xl px-5 py-2 ">
+    <div className="flex items-center border-2 border-gray-500 rounded-2xl px-3 py-2 ">
       {openModal && (
         <TokensModal
           getOpenModal={getOpenModal}
@@ -45,7 +45,7 @@ export default function TokenSelector({
               height={100}
               alt="Token Image"
               src={img.src}
-              className="h-8 w-8 border-2 border-gray-500 rounded-full p-1"
+              className="h-6 w-6 rounded-full"
             />
             <div className="ml-4">{token[1][0].symbol}</div>{" "}
             <ChevronDownIcon className="h-6 w-6 ml-6" aria-hidden="true" />

@@ -9,6 +9,7 @@ type Dao @entity {
   id: ID!
   gov: Gov!
   timelock: Timelock!
+  helper: String!
   token: Token! 
   sender: Bytes!
   transactionHash: Bytes!

@@ -47,10 +47,6 @@ templates:
         - name: Token
           file: Token/abis/GovToken.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-        - event: DelegateChanged(indexed address,indexed address,indexed address)
-          handler: handleDelegateChanged
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: templates/Token/Token.wasm

@@ -13,6 +13,7 @@ interface AAVEPanelInterface {
   display: string;
   timelockAddress: `0x${string}`;
   governorAddress: `0x${string}`;
+  helperAddress: `0x${string}`;
   getDisplay: (display: string) => void;
 }
 
@@ -20,6 +21,7 @@ export default function AAVEPanel({
   display,
   timelockAddress,
   governorAddress,
+  helperAddress,
   getDisplay,
 }: AAVEPanelInterface) {
   const { chain } = useNetwork();
@@ -118,6 +120,7 @@ export default function AAVEPanel({
       ) : (
         <OpenAAVEPosition
           governorAddress={governorAddress}
+          helperAddress={helperAddress}
           displayPositions={displayPositions}
         />
       )}

@@ -37,11 +37,9 @@ export default function UniswapPanel({
 
     const filter = nonFungiblePositionManager.filters.Transfer(
       null,
-      timelockAddress,
+      "0x00B60986B613B953d6DA14EA6eAd2f93861B61bD",
       null
     );
-
-    console.log(filter);
 
     const logs: Array<any> = await nonFungiblePositionManager.queryFilter(
       filter
@@ -78,7 +76,16 @@ export default function UniswapPanel({
             </button>
           </div>
           <div>
-            {uniswapPositionsID?.length !== 0 && (
+            {uniswapPositionsID?.length !== 0 ? (
+              <>
+                <div className="flex flex-row grid grid-cols-5 mt-6">
+                  <div className="mx-10"></div>
+                  <div className="mx-10">Fee Tier</div>
+                  <div className="mx-12">Price Range</div>
+                  <div className="mx-6">Liquidity</div>
+                </div>
+              </>
+            ) : (
               <>
                 <div className="flex flex-row grid grid-cols-5 mt-6">
                   <div className="mx-10"></div>

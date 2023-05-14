@@ -19,6 +19,7 @@ export default function Dao() {
   const router = useRouter();
   const [timelockAddress, setTimelockAddress] = useState<`0x${string}`>();
   const [governorAddress, setGovernorAddress] = useState<`0x${string}`>();
+  const [helperAddress, setHelperAddress] = useState<`0x${string}`>();
   const [displayType, setDisplayType] = useState<string>("daoInfo");
   const [dao, setDao] = useState<any>();
 
@@ -26,6 +27,7 @@ export default function Dao() {
     const queryBody = `query {
         daos(where: {gov_: {id: "${daoName}"}}) {
           id
+          helper
           gov {
             name
             id
@@ -45,9 +47,9 @@ export default function Dao() {
 
     try {
       let response = await client.query({ query: Daos(queryBody) });
-
       setTimelockAddress(response.data.daos[0].timelock.id);
       setGovernorAddress(response.data.daos[0].gov.id);
+      setHelperAddress(response.data.daos[0].helper);
       setDao(response.data.daos[0]);
     } catch (err) {
       console.log({ err });
@@ -72,7 +74,7 @@ export default function Dao() {
         <div className="flex flex-col w-screen">
           {displayType === "uniswapPositions" && (
             <div className="flex items-center text-center ml-14">
-              <Link href={`/`} onClick={() => setDisplay("daoInfo")}>
+              <Link href={"/"} onClick={() => setDisplay("daoInfo")}>
                 Home{" "}
               </Link>
               <ChevronRightIcon className="h-4 w-4 mx-1" />
@@ -235,11 +237,13 @@ export default function Dao() {
               governorAddress &&
               displayType === "aavePositions"
                 ? timelockAddress &&
+                  helperAddress &&
                   governorAddress && (
                     <AAVEPanel
                       display={displayType}
                       timelockAddress={timelockAddress}
                       governorAddress={governorAddress}
+                      helperAddress={helperAddress}
                       getDisplay={getDisplay}
                     />
                   )
@@ -259,10 +263,12 @@ export default function Dao() {
       {displayType === "aavePositionsOpen" &&
         timelockAddress &&
         governorAddress &&
+        helperAddress &&
         dao && (
           <AAVEPanel
             display={displayType}
             timelockAddress={timelockAddress}
+            helperAddress={helperAddress}
             governorAddress={governorAddress}
             getDisplay={getDisplay}
           />

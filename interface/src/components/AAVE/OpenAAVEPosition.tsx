@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import TokenSelector from "../TokenSelector/TokenSelector";
 import ethLogo from "../../../public/ic_ethereum.svg";
 import FeeSelector from "@/components/FeeSelector/FeeSelector";
-import { createProposalOpenPositionAAVE } from "../../../utils/aaveFunctions";
+import { createProposeOpenNaturalPosition } from "../../../utils/aaveFunctions";
 import abi from "../../../abi/abis.json";
 import { useProvider } from "wagmi";
 import { ERC20 } from "../../../types/ERC20";
-import { INonfungiblePositionManager } from "../../../types/INonfungiblePositionManager";
+import { GovHelper } from "../../../types/GovHelper";
+import { IWETH9 } from "../../../types/IWETH";
 import { ethers } from "ethers";
 import AAVE from "../../../public/AAVE.svg";
 import CreatePositionButton from "../Buttons/CreatePositionButton";
@@ -16,68 +17,127 @@ const fees = [10000, 3000, 1000, 500];
 
 interface OpenAAVEPositionInterface {
   governorAddress: `0x${string}`;
+  helperAddress: `0x${string}`;
   displayPositions: string;
 }
 
 export default function OpenAAVEPosition({
   governorAddress,
+  helperAddress,
   displayPositions,
 }: OpenAAVEPositionInterface) {
   const provider = useProvider();
-  const [token1, setToken1] = useState([
+  const [collateralTokenAddress, setCollateralTokenAddress] = useState([
     "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     [{ img: ethLogo, symbol: "ETH" }],
   ]);
-  const [token2, setToken2] = useState();
+  const [borrowTokenAddress, setBorrowTokenAddress] = useState();
   const [selectedFee, setSelectedFee] = useState<number>(10000);
-  const [token1Amount, setToken1Amount] = useState<number>();
-  const [token2Amount, setToken2Amount] = useState<number>();
+  const [collateralAmount, setCollateralAmount] = useState<number>();
+  const [borrowAmount, setBorrowAmount] = useState<number>();
   const [callDatas, setCallDatas] = useState<string[]>();
   const [values, setValues] = useState<string[]>();
   const [targets, setTargets] = useState<string[]>();
   const [descriptionHash, setDescriptionHash] = useState<string>();
   const [payload, setPayload] = useState<boolean>(false);
-
   const [isLong, setIsLong] = useState<boolean>(false);
 
-  const nonFungiblePositionManagerAddr =
-    "0xC36442b4a4522E871399CD717aBDD847Ab11FE88";
-
-  const getToken1Selected = (token1: any) => {
-    setToken1(token1);
+  const getCollateralTokenAddressSelected = (token1: any) => {
+    setCollateralTokenAddress(token1);
   };
 
-  const getToken2Selected = (token2: any) => {
-    setToken2(token2);
+  const getBorrowTokenAddressSelected = (token2: any) => {
+    setBorrowTokenAddress(token2);
   };
 
   const getFeeSelected = (fee: number) => {
     setSelectedFee(fee);
   };
 
-  const handleToken1AmountChange = (val: string) => {
-    setToken1Amount(Number(val));
+  const handleCollateralAmountChange = (val: string) => {
+    setCollateralAmount(Number(val));
   };
 
-  const handleToken2AmountChange = (val: string) => {
-    setToken2Amount(Number(val));
+  const handleBorrowAmountChange = (val: string) => {
+    setBorrowAmount(Number(val));
   };
+
+  const priceFeedAddress = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612";
+  const variableDebtTokenAddress = "0x5E76E98E0963EcDC6A065d1435F84065b7523f39";
 
   const onGeretarePayloadClick = async () => {
-    if (token1 !== undefined && selectedFee !== undefined) {
-      const token1Address = token1[0] as string;
-      loadData(selectedFee).then(() => setPayload(true));
+    if (
+      helperAddress !== undefined &&
+      collateralTokenAddress !== undefined &&
+      collateralAmount !== undefined &&
+      borrowTokenAddress !== undefined &&
+      borrowAmount !== undefined &&
+      priceFeedAddress !== undefined &&
+      selectedFee !== undefined &&
+      variableDebtTokenAddress !== undefined
+    ) {
+      loadData(
+        helperAddress,
+        collateralTokenAddress[0].toString(),
+        collateralAmount.toString(),
+        borrowTokenAddress[0] as string,
+        borrowAmount.toString(),
+        priceFeedAddress,
+        selectedFee.toString(),
+        variableDebtTokenAddress
+      ).then(() => setPayload(true));
     }
   };
 
-  async function loadData(selectedFee: number) {
-    const nonFungiblePositionManager = new ethers.Contract(
-      nonFungiblePositionManagerAddr,
-      abi.abiINonfungiblePositionManager,
+  async function loadData(
+    helperAddress: string,
+    collateralTokenAddress: string,
+    collateralAmount: string,
+    borrowTokenAddress: string,
+    borrowAmount: string,
+    priceFeed: string,
+    selectedFee: string,
+    variableDebtTokenAddress: string
+  ) {
+    const helper = new ethers.Contract(
+      helperAddress,
+      abi.abiGovHelper,
       provider
-    ) as INonfungiblePositionManager;
+    ) as GovHelper;
 
-    const result = await createProposalOpenPositionAAVE();
+    const collateralToken = new ethers.Contract(
+      collateralTokenAddress,
+      abi.abiERC20,
+      provider
+    ) as ERC20;
+
+    const borrowToken = new ethers.Contract(
+      borrowTokenAddress,
+      abi.abiIWETH,
+      provider
+    ) as IWETH9;
+
+    const variableDebtToken = new ethers.Contract(
+      variableDebtTokenAddress,
+      abi.abiVariableDebtToken,
+      provider
+    );
+
+    const slippageFinal = 100;
+    const interestRateModeFinal = 2;
+
+    const result = await createProposeOpenNaturalPosition(
+      helper,
+      collateralToken,
+      ethers.utils.parseUnits(collateralAmount.toString(), "6").toString(),
+      borrowToken,
+      ethers.utils.parseUnits(borrowAmount.toString(), "18").toString(),
+      interestRateModeFinal.toString(),
+      priceFeed,
+      slippageFinal.toString(),
+      selectedFee.toString(),
+      variableDebtToken
+    );
 
     setCallDatas(result.callDatas);
     setValues(result.values);
@@ -86,10 +146,13 @@ export default function OpenAAVEPosition({
   }
 
   useEffect(() => {
-    if (token2 !== undefined && token1[1] === token2[1]) {
-      setToken2(undefined);
+    if (
+      borrowTokenAddress !== undefined &&
+      collateralTokenAddress[1] === borrowTokenAddress[1]
+    ) {
+      setBorrowTokenAddress(undefined);
     }
-  }, [token1]);
+  }, [collateralTokenAddress]);
 
   return (
     <div>
@@ -179,15 +242,15 @@ export default function OpenAAVEPosition({
                 <h1 className="font-semibold text-lg mb-2">Collateral</h1>
                 <div className="flex flex-row mb-2">
                   <TokenSelector
-                    getTokenSelected={getToken1Selected}
-                    token={token1}
+                    getTokenSelected={getCollateralTokenAddressSelected}
+                    token={collateralTokenAddress}
                   />
                 </div>
               </div>
               <div className="mt-8 flex items-center">
                 <input
-                  value={token1Amount}
-                  onChange={(e) => handleToken1AmountChange(e.target.value)}
+                  value={collateralAmount}
+                  onChange={(e) => handleCollateralAmountChange(e.target.value)}
                   onFocus={(e) =>
                     e.target.addEventListener(
                       "wheel",
@@ -206,19 +269,19 @@ export default function OpenAAVEPosition({
                 />
               </div>
               <div className="my-2">
-                <h1 className="font-semibold text-lg mb-2">Collateral</h1>
+                <h1 className="font-semibold text-lg mb-2">Asset to Short</h1>
                 <div className="flex flex-row">
                   <TokenSelector
-                    getTokenSelected={getToken2Selected}
-                    token={token2}
-                    token1={token1}
+                    getTokenSelected={getBorrowTokenAddressSelected}
+                    token={borrowTokenAddress}
+                    token1={collateralTokenAddress}
                   />
                 </div>
               </div>
               <div className="mt-8 flex items-center">
                 <input
-                  value={token2Amount}
-                  onChange={(e) => handleToken2AmountChange(e.target.value)}
+                  value={borrowAmount}
+                  onChange={(e) => handleBorrowAmountChange(e.target.value)}
                   onFocus={(e) =>
                     e.target.addEventListener(
                       "wheel",
@@ -256,11 +319,11 @@ export default function OpenAAVEPosition({
           </div>
         </div>
         <div className="mb-12">
-          {token1 !== undefined &&
-          token2 !== undefined &&
-          token1Amount !== undefined &&
+          {collateralTokenAddress !== undefined &&
+          borrowTokenAddress !== undefined &&
+          collateralAmount !== undefined &&
           selectedFee !== undefined &&
-          token2Amount !== undefined &&
+          borrowAmount !== undefined &&
           governorAddress !== undefined ? (
             payload ? (
               <CreatePositionButton

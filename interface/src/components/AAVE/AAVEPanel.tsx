@@ -88,7 +88,18 @@ export default function AAVEPanel({
               Open a Position
             </button>
           </div>
-          {debtAAVEArbitrum?.length !== 0 && (
+
+          {debtAAVEArbitrum?.length !== 0 ? (
+            <>
+              <div className="flex flex-row grid grid-cols-6 mt-6">
+                <div></div>
+                <div className="pl-20">Collateral</div>
+                <div>Loan Interest Rate</div>
+                <div className="pl-14">Realized PnL</div>
+                <div className="pl-8">Unrealized PnL</div>
+              </div>
+            </>
+          ) : (
             <>
               <div className="flex flex-row grid grid-cols-6 mt-6">
                 <div></div>
@@ -107,6 +118,7 @@ export default function AAVEPanel({
               <div key={index}>
                 <AAVEPositionCard
                   debtToken={debtToken}
+                  helperAddress={helperAddress}
                   timelockAddress={timelockAddress}
                   governorAddress={governorAddress}
                   tokens={tokens}

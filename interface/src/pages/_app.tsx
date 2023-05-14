@@ -6,11 +6,15 @@ import { WagmiConfig, createClient, configureChains } from "wagmi";
 import { arbitrum, optimism, polygon } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import React from "react";
 import Navbar from "@/components/Layout/Navbar";
 const { chains, provider, webSocketProvider } = configureChains(
   [arbitrum, optimism, polygon],
-  [publicProvider()]
+  [
+    alchemyProvider({ apiKey: "jV48FiIqymNxVnj4BcMjimmRgaNfXPlC" }),
+    publicProvider(),
+  ]
 );
 
 const { connectors } = getDefaultWallets({

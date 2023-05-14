@@ -47,6 +47,7 @@ export default function Dao() {
 
     try {
       let response = await client.query({ query: Daos(queryBody) });
+
       setTimelockAddress(response.data.daos[0].timelock.id);
       setGovernorAddress(response.data.daos[0].gov.id);
       setHelperAddress(response.data.daos[0].helper);

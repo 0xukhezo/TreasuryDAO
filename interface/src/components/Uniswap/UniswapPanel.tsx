@@ -33,11 +33,11 @@ export default function UniswapPanel({
       nonFungiblePositionManagerAddr,
       abi.abiINonfungiblePositionManager,
       provider
-    ) as INonfungiblePositionManager;
+    );
 
     const filter = nonFungiblePositionManager.filters.Transfer(
       null,
-      "0x00B60986B613B953d6DA14EA6eAd2f93861B61bD",
+      timelockAddress,
       null
     );
 

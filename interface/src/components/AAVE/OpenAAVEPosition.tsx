@@ -63,7 +63,6 @@ export default function OpenAAVEPosition({
   };
 
   const priceFeedAddress = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612";
-  const variableDebtTokenAddress = "0x5E76E98E0963EcDC6A065d1435F84065b7523f39";
 
   const onGeretarePayloadClick = async () => {
     if (
@@ -73,8 +72,7 @@ export default function OpenAAVEPosition({
       borrowTokenAddress !== undefined &&
       borrowAmount !== undefined &&
       priceFeedAddress !== undefined &&
-      selectedFee !== undefined &&
-      variableDebtTokenAddress !== undefined
+      selectedFee !== undefined
     ) {
       loadData(
         helperAddress,
@@ -83,8 +81,7 @@ export default function OpenAAVEPosition({
         borrowTokenAddress[0] as string,
         borrowAmount.toString(),
         priceFeedAddress,
-        selectedFee.toString(),
-        variableDebtTokenAddress
+        selectedFee.toString()
       ).then(() => setPayload(true));
     }
   };
@@ -96,8 +93,7 @@ export default function OpenAAVEPosition({
     borrowTokenAddress: string,
     borrowAmount: string,
     priceFeed: string,
-    selectedFee: string,
-    variableDebtTokenAddress: string
+    selectedFee: string
   ) {
     const helper = new ethers.Contract(
       helperAddress,
@@ -117,8 +113,17 @@ export default function OpenAAVEPosition({
       provider
     ) as IWETH9;
 
+    const aaveAdrrProvider = new ethers.Contract(
+      "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb",
+      abi.abiIPoolAddressesProvider,
+      provider
+    );
+
+    const aavePoolAddr = await aaveAdrrProvider.getPool();
+    const pool = new ethers.Contract(aavePoolAddr, abi.abiIPool, provider);
+    const borrowData = await pool.getReserveData(borrowTokenAddress);
     const variableDebtToken = new ethers.Contract(
-      variableDebtTokenAddress,
+      borrowData.variableDebtTokenAddress,
       abi.abiVariableDebtToken,
       provider
     );

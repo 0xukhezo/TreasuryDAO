@@ -34,7 +34,36 @@ export async function createProposeOpenNaturalPosition(
     targets.push(helper.address)
     values.push('0')
 
-    const descriptionHash = `# Open AAVE Position \n Create a position in AAVE`
+    const descriptionHash = `# Open AAVE Position \n Create a position in AAVE `
   
     return { callDatas, targets, values, descriptionHash }
   }
+
+export async function createProposeCloseNaturalPosition(tokenIn:ERC20, helper: GovHelper, borrowToken: IWETH9, borrowAmount: string, priceFeed: string, slippage:string, poolFee:string, interestRateMode: string,balanceAUsdc:string, pool:any, timelockAddr:string){
+    let callDatas = []
+    let targets = []
+    let values = []
+
+    console.log(helper.address, borrowAmount)
+
+    callDatas.push(tokenIn.interface.encodeFunctionData('approve', [helper.address, borrowAmount]))
+    targets.push(tokenIn.address)
+    values.push('0')
+
+    console.log(tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode)
+
+    callDatas.push(helper.interface.encodeFunctionData('swapRepay', [tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode]))
+    targets.push(helper.address)
+    values.push('0')
+
+    console.log(tokenIn.address,balanceAUsdc,timelockAddr)
+
+    callDatas.push(pool.interface.encodeFunctionData('withdraw',[tokenIn.address,balanceAUsdc,timelockAddr]))
+    targets.push(pool.address)
+    values.push('0')
+
+    const descriptionHash =`# Close AAVE Position \n Close a position in AAVE `
+
+    return { callDatas, targets, values, descriptionHash }
+
+}

@@ -31,7 +31,7 @@ export default function UniswapPositionCard({
   return (
     <div>
       <>
-        {dataPosition !== undefined && (
+        {dataPosition !== undefined && dataPosition[7].toString() !== "0" && (
           <div className="rounded-lg bg-beige px-4 py-8 mt-4 ">
             <PositionCardInfo
               id={id}

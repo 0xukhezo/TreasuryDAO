@@ -192,8 +192,8 @@ export default function Dao() {
             </div>
           </div>
           <div className="mt-4 font-light ml-14">
-            This is a {dao.gov.name} that fully controls {dao.gov.name} and it's
-            on-chain treasury.
+            This is a {dao.gov.name} that fully controls {dao.gov.name} and it
+            is on-chain treasury.
           </div>
         </div>
       )}

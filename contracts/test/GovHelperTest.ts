@@ -151,6 +151,7 @@ describe('InvestmentDAO', function () {
 
             const usdcData = await pool.getReserveData(usdcAddr)
             const aUsdc = await ethers.getContractAt("IERC20", usdcData.aTokenAddress)
+            console.log(aUsdc.address)
             const balanceAUsdc = await aUsdc.connect(deployer).balanceOf(timelock.address)
 
             const { callDatas: callDatasClose, targets: targetsClose, values: valueClose, descriptionHash: descriptionHashClose } = await createProposeCloseNaturalPosition(usdc,helper,weth,amountIn.toString(),"0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612","100","500","2", balanceAUsdc.toString(), pool, timelock.address)
@@ -218,15 +219,19 @@ async function createProposeCloseNaturalPosition(tokenIn:ERC20, helper: GovHelpe
     targets.push(tokenIn.address)
     values.push('0')
 
+    console.log(helper.address, borrowAmount)
+
     callDatas.push(helper.interface.encodeFunctionData('swapRepay', [tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode]))
     targets.push(helper.address)
     values.push('0')
 
-    console.log(balanceAUsdc)
+    console.log(tokenIn.address, borrowAmount, borrowToken.address,slippage,poolFee,priceFeed,interestRateMode)
 
     callDatas.push(pool.interface.encodeFunctionData('withdraw',[tokenIn.address,balanceAUsdc,timelockAddr]))
     targets.push(pool.address)
     values.push('0')
+
+    console.log(tokenIn.address,balanceAUsdc,timelockAddr)
 
     const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes('Open natural position'))
 
